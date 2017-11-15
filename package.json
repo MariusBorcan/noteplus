@@ -1,0 +1,25 @@
+{
+  "name": "noteplus",
+  "version": "1.0.0",
+  "description": "Noteplus is a simple application that allows you to create notes and code snippets for your github projects. Noteplus integrates with Github. Feel free to use it to keep track of what you learn while contributing  to your projects.",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.22.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MariusBorcan/noteplus.git"
+  },
+  "author": "Marius Borcan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MariusBorcan/noteplus/issues"
+  },
+  "homepage": "https://github.com/MariusBorcan/noteplus#readme"
+}
