@@ -26,28 +26,26 @@ var Users = sequelize.define('users', {
 })
 
 var Projects = sequelize.define('projects', {
+    userId: Sequelize.INTEGER,
     title: Sequelize.STRING,
     description: Sequelize.STRING,
     githubUrl: Sequelize.STRING
 })
 
 var Notes = sequelize.define('notes', {
+    projectId: Sequelize.INTEGER,
     title: Sequelize.STRING,
     text: Sequelize.STRING
 })
 
 var Tags = sequelize.define('tags', {
+    noteId: Sequelize.INTEGER,
     text: Sequelize.STRING
 })
 
-Notes.hasMany(Tags, { foreignKey: "id"})
-Tags.belongsTo(Notes, {foreignKey: "id"})
-
-Projects.hasMany(Notes, {foreignKey: "id"})
-Notes.belongsTo(Projects, {foreignKey: "id"})
-
-Users.hasMany(Projects, {foreignKey: "id"})
-Projects.belongsTo(Users, {foreignKey: "id"})
+Notes.belongsTo(Projects, {foreignKey: "projectId", targetKey:"id"})
+Tags.belongsTo(Notes, {foreignKey: "noteId", targetKey:"id"})
+Projects.belongsTo(Users, {foreignKey:"userId", targetKey:"id"})
 
 app.use(express.static('public'))
 app.use('/public', express.static('public'))

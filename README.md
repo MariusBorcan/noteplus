@@ -8,11 +8,156 @@ to your projects.
 These instructions will get you a copy of the project up and running on your environment.
 
 ### Setup
-    Clone repository from Github
+
+Clone repository from Github
     
-    ```
-    git clone https://github.com/MariusBorcan/noteplus
-    ```
+```
+git clone https://github.com/MariusBorcan/noteplus
+```
+
+Setup node.js
+
+```
+cd noteplus
+```
+
+```
+npm install
+```
+
+Setup mysql
+
+```
+mysql-ctl start
+```
+
+```
+mysql -u root
+```
+```
+source sql/database.sql
+```
+```
+exit
+```
+
+run server.js
+```
+node server.js
+```
+
+##Endpoints
+
+Get a list of all users
+
+```
+GET https://noteplus-mariusbd.c9users.io/users
+```
+
+```
+[
+    {
+        "id": 1,
+        "name": "Marius Dumitru Borcan",
+        "email": "dtrumarius16@gmail.com",
+        "password": "abc",
+        "githubUrl": "github",
+        "imageUrl": "image",
+        "organization": "org",
+        "location": "loc",
+        "website": "www",
+        "createdAt": "2017-11-21T19:14:16.000Z",
+        "updatedAt": "2017-11-21T19:14:16.000Z"
+    },
+    {
+        "id": 3,
+        "name": "Ion Popescu",
+        "email": "ionpopescu@gmail.com",
+        "password": "abc",
+        "githubUrl": "github",
+        "imageUrl": "image",
+        "organization": "org",
+        "location": "loc",
+        "website": "www",
+        "createdAt": "2017-11-21T19:14:53.000Z",
+        "updatedAt": "2017-11-21T19:14:53.000Z"
+    }
+]
+```
+
+Add an user
+
+```
+POST https://noteplus-mariusbd.c9users.io/users
+```
+```
+    {
+        "id": 1,
+        "name": "Marius Dumitru Borcan",
+        "email": "dtrumarius16@gmail.com",
+        "password": "abc",
+        "githubUrl": "github",
+        "imageUrl": "image",
+        "organization": "org",
+        "location": "loc",
+        "website": "www",
+        "createdAt": "2017-11-21T19:14:16.000Z",
+        "updatedAt": "2017-11-21T19:14:16.000Z"
+    }
+```
+
+Update an user
+
+```
+PUT https://noteplus-mariusbd.c9users.io/users
+```
+```
+    {
+        "id": 1,
+        "name": "Marius Dumitru Borcan",
+        "email": "dtrumarius16@gmail.com",
+        "password": "abc",
+        "githubUrl": "github",
+        "imageUrl": "image",
+        "organization": "org",
+        "location": "loc",
+        "website": "www",
+        "createdAt": "2017-11-21T19:14:16.000Z",
+        "updatedAt": "2017-11-21T19:14:16.000Z"
+    }
+```
+Delete an user
+
+```
+DELETE https://noteplus-mariusbd.c9users.io/users/1
+```
+
+Get a list of all projects
+
+```
+GET https://noteplus-mariusbd.c9users.io/projects
+```
+
+Add a project
+
+```
+POST https://noteplus-mariusbd.c9users.io/projects
+```
+```
+    {
+		"userId":1,
+        "title": "Noteplus",
+        "description": "Awesome project",
+        "githubUrl": "github"
+    }   
+```
+
+Delete a project
+
+```
+DELETE https://noteplus-mariusbd.c9users.io/projects/1
+```
+
 
 
 ## Components
@@ -38,8 +183,6 @@ These instructions will get you a copy of the project up and running on your env
  * Insert snippet into a note
  * Delete note
  * Delete project
-
-## Endpoints
 
 
 

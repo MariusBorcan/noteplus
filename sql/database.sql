@@ -12,6 +12,7 @@ USE `noteplus`;
 
 CREATE TABLE IF NOT EXISTS `projects` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `userId` smallint(5),
   `title` varchar(30) DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `githubUrl` varchar(100) DEFAULT NULL,
@@ -29,9 +30,9 @@ CREATE TABLE IF NOT EXISTS `projects` (
 
 CREATE TABLE IF NOT EXISTS `notes` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `projectId` smallint(5),
   `title` varchar(30) DEFAULT NULL,
   `text` varchar(100) DEFAULT NULL,
-  `projectId` smallint(5) NOT NULL,
   `createdAt` timestamp,
   `updatedAt` timestamp,
   PRIMARY KEY (`id`),
@@ -68,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 CREATE TABLE IF NOT EXISTS `tags` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
+  `noteId` smallint(5),
   `text` varchar(30) DEFAULT NULL,
   `createdAt` timestamp,
   `updatedAt` timestamp,
