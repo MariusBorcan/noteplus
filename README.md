@@ -3,6 +3,18 @@ Noteplus is a simple application that allows you to create notes and code snippe
 Noteplus integrates with Github. Feel free to use it to keep track of what you learn while contributing 
 to your projects.
 
+## Getting Started
+
+These instructions will get you a copy of the project up and running on your environment.
+
+### Setup
+    Clone repository from Github
+    
+    ```
+    git clone https://github.com/MariusBorcan/noteplus
+    ```
+
+
 ## Components
  * Projects list
  * Projects search
@@ -28,18 +40,6 @@ to your projects.
  * Delete project
 
 ## Endpoints
- * POST /authentication
- * GET /profile
- * POST /projects
- * POST /notes
- * GET /projects
- * GET /notes
- * PUT /notes
- * GET /notes/:id
- * PUT /notes/:id
- * DELETE /notes/:id
- * DELETE projects/:id/notes
- * DELETE projects/:id
- * DELETE projects/
+
 
 

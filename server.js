@@ -40,14 +40,28 @@ var Tags = sequelize.define('tags', {
     text: Sequelize.STRING
 })
 
-Tags.belongsTo(Notes)
-Notes.belongsTo(Projects)
+Notes.hasMany(Tags, { foreignKey: "id"})
+Tags.belongsTo(Notes, {foreignKey: "id"})
+
+Projects.hasMany(Notes, {foreignKey: "id"})
+Notes.belongsTo(Projects, {foreignKey: "id"})
+
+Users.hasMany(Projects, {foreignKey: "id"})
+Projects.belongsTo(Users, {foreignKey: "id"})
 
 app.use(express.static('public'))
 app.use('/public', express.static('public'))
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
 
+
+app.get('/projects', function(request, response) {
+    Projects.findAll().then(
+            function(projects) {
+                response.status(200).send(projects)
+            }
+        )
+})
 
 app.get('/projects/:id', function(request, response) {
     Projects.findOne({where: {id:request.params.id}}).then(function(project) {
@@ -102,6 +116,15 @@ app.get('/notes/:id', function(request, response) {
     })
 })
 
+app.get('/notes', function(request, response) {
+    Notes.findAll().then(
+            function(notes) {
+                response.status(200).send(notes)
+            }
+        )
+})
+
+
 app.post('/notes', function(request, response) {
     Notes.create(request.body).then(function(note) {
         response.status(201).send(note)
@@ -143,6 +166,14 @@ app.get('/users/:id', function(request, response) {
             response.status(404).send()
         }
     })
+})
+
+app.get('/users', function(request, response) {
+    Users.findAll().then(
+            function(users) {
+                response.status(200).send(users)
+            }
+        )
 })
 
 app.post('/users', function(request, response) {
@@ -187,6 +218,14 @@ app.get('/tags/:id', function(request, response) {
             response.status(404).send()
         }
     })
+})
+
+app.get('/tags', function(request, response) {
+    Tags.findAll().then(
+            function(tags) {
+                response.status(200).send(tags)
+            }
+        )
 })
 
 app.post('/tags', function(request, response) {
