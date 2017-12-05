@@ -4,8 +4,7 @@ var routes = require('./routes/index');
 var api = require('./routes/api')
 var path = require("path")
 
-
-const staticAssetsPath = path.resolve(__dirname, 'build');
+const staticAssetsPath = path.resolve(__dirname, 'public');
 app.use(express.static(staticAssetsPath));
 
 app.set('views', path.join(__dirname, 'views'));

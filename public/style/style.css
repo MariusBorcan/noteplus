@@ -1,0 +1,121 @@
+body {
+    font-family: Geneva,Tahoma,Verdana,sans-serif
+}
+
+.button-no-style {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    border-color:transparent;
+    outline-width: 0;
+}
+
+.button-no-style:focus {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    outline-width: 0;
+    border-color:transparent;
+}
+
+.button-no-style:active {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    border-color:transparent;
+    outline-width: 0;
+}
+
+.button-no-style:focus {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    border-color:transparent;
+    outline-width: 0;
+}
+
+.button-no-style:hover {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    border-color:transparent;
+    outline-width: 0;
+}
+
+.button-no-style:visited {
+    padding: 0;
+    background: none;
+    color: #e27d60;
+    font-size: 16px;
+    outline-style:none;
+    box-shadow:none;
+    border-color:transparent;
+    outline-width: 0;
+}
+
+.note-preview-title{
+    display: inline-block;
+    color:#333333;
+    font-size: 14px;
+}
+
+.note-preview-text{
+    margin-top: 15px;
+    display: inline-block;
+    color:#959595;
+    font-size: 14px;
+}
+
+.note-preview-item {
+    padding-top:15px;
+    padding-left:15px;
+    padding-bottom:15px;
+    cursor:pointer;
+}
+
+.note-preview-item:hover {
+    background-color: #FCF2EF;
+}
+
+.button-action {
+    padding: 10px;
+}
+
+.button-action:focus {
+    padding: 10px;
+    background-color: #FCF2EF;
+}
+
+.button-action:active {
+    padding: 10px;
+    background-color: #FCF2EF;
+}
+
+.button-action:focus {
+    padding: 10px;
+    background-color: #FCF2EF;
+}
+
+.button-action:hover {
+    padding: 10px;
+    background-color: #FCF2EF;
+}
+
+.button-action:visited {
+    padding: 10px;
+}

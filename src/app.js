@@ -2,14 +2,21 @@
 //React code needs to be compiled
 import React, { Component} from 'react'
 import ReactDOM from 'react-dom'
+import Sidebar from './components/Sidebar'
+import Note from './components/Note'
+import Topbar from './components/Topbar'
 
 //this is like creating a new tag named App that we can use as html
 class App extends Component {
     
     render() {
         return (
-            <div>
-                Hello React!
+            <div className="container-fluid">
+                <div class="row content">
+                    <Sidebar />
+                    <Topbar />
+                    <Note />
+                </div>
             </div>
         )
     }
