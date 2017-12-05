@@ -14,7 +14,7 @@ class App extends Component {
             <div className="container-fluid">
                 <div class="row content">
                     <Sidebar />
-                    <Topbar />
+                    <Topbar newProjectAdded = {this.newProjectAdded} />
                     <Note />
                 </div>
             </div>

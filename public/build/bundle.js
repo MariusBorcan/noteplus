@@ -992,7 +992,7 @@ var App = function (_Component) {
                     'div',
                     { 'class': 'row content' },
                     _react2.default.createElement(_Sidebar2.default, null),
-                    _react2.default.createElement(_Topbar2.default, null),
+                    _react2.default.createElement(_Topbar2.default, { newProjectAdded: this.newProjectAdded }),
                     _react2.default.createElement(_Note2.default, null)
                 )
             );
@@ -38268,10 +38268,72 @@ var Topbar = function (_Component) {
     function Topbar() {
         _classCallCheck(this, Topbar);
 
-        return _possibleConstructorReturn(this, (Topbar.__proto__ || Object.getPrototypeOf(Topbar)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Topbar.__proto__ || Object.getPrototypeOf(Topbar)).call(this));
+
+        _this.state = {
+            showProjectModal: false,
+            showNoteModal: false,
+            projectName: "",
+            projectUrl: "",
+            projectDescription: ""
+        };
+        _this.closeProjectModal = _this.closeProjectModal.bind(_this);
+        _this.openProjectModal = _this.openProjectModal.bind(_this);
+        _this.closeNoteModal = _this.closeNoteModal.bind(_this);
+        _this.openNoteModal = _this.openNoteModal.bind(_this);
+        return _this;
     }
 
     _createClass(Topbar, [{
+        key: 'closeProjectModal',
+        value: function closeProjectModal() {
+            this.setState({
+                showProjectModal: false
+            });
+        }
+    }, {
+        key: 'openProjectModal',
+        value: function openProjectModal() {
+            this.setState({
+                showProjectModal: true
+            });
+        }
+    }, {
+        key: 'closeNoteModal',
+        value: function closeNoteModal() {
+            this.setState({
+                showNoteModal: false
+            });
+        }
+    }, {
+        key: 'openNoteModal',
+        value: function openNoteModal() {
+            this.setState({
+                showNoteModal: true
+            });
+        }
+    }, {
+        key: 'updateProjectUrl',
+        value: function updateProjectUrl(event) {
+            this.setState({
+                projectUrl: event.target.value
+            });
+        }
+    }, {
+        key: 'updateProjectName',
+        value: function updateProjectName(event) {
+            this.setState({
+                projectName: event.target.value
+            });
+        }
+    }, {
+        key: 'updateProjectDescription',
+        value: function updateProjectDescription(event) {
+            this.setState({
+                projectDescription: event.target.value
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
 
@@ -38291,14 +38353,80 @@ var Topbar = function (_Component) {
                         null,
                         _react2.default.createElement(
                             _reactBootstrap.MenuItem,
-                            { eventKey: '1', bsStyle: '', className: 'button-no-style button-action' },
+                            { eventKey: '1', bsStyle: '', onSelect: this.openProjectModal,
+                                className: 'button-no-style button-action' },
                             'New project'
                         ),
                         _react2.default.createElement(
                             _reactBootstrap.MenuItem,
-                            { eventKey: '2', bsStyle: '', className: 'button-no-style button-action' },
+                            { eventKey: '2', bsStyle: '', onSelect: this.openNoteModal,
+                                className: 'button-no-style button-action' },
                             'New note'
                         )
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactBootstrap.Modal,
+                    { show: this.state.showProjectModal, onHide: this.closeProjectModal },
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Header,
+                        { closeButton: true },
+                        _react2.default.createElement(
+                            _reactBootstrap.Modal.Title,
+                            null,
+                            'Add project'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Body,
+                        null,
+                        _react2.default.createElement(
+                            'form',
+                            null,
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('input', { onChange: this.updateProjectUrl.bind(this), className: 'form-control', placeholder: 'Your project URL...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('input', { readonly: 'readonly', onChange: this.updateProjectName.bind(this), className: 'form-control', placeholder: 'Your project name...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('textarea', { readonly: 'readonly', onChange: this.updateProjectDescription.bind(this), className: 'form-control', placeholder: 'Your project description...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { className: 'btn btn-success btn-block' },
+                                'Load'
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.closeProjectModal, className: 'btn btn-danger btn-block' },
+                                'Cancel'
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(
+                    _reactBootstrap.Modal,
+                    { show: this.state.showNoteModal, onHide: this.closeNoteModal },
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Header,
+                        { closeButton: true },
+                        _react2.default.createElement(
+                            _reactBootstrap.Modal.Title,
+                            null,
+                            'Add Note'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Body,
+                        null,
+                        'Note body'
                     )
                 )
             );
