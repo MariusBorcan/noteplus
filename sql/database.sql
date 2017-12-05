@@ -7,10 +7,10 @@ CREATE DATABASE `noteplus` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `noteplus`;
 
 --
--- Table structure for table `projects`
+-- Table structure for table `Projects`
 --
 
-CREATE TABLE IF NOT EXISTS `projects` (
+CREATE TABLE IF NOT EXISTS `Projects` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `userId` smallint(5),
   `title` varchar(30) DEFAULT NULL,
@@ -25,10 +25,10 @@ CREATE TABLE IF NOT EXISTS `projects` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notes`
+-- Table structure for table `Notes`
 --
 
-CREATE TABLE IF NOT EXISTS `notes` (
+CREATE TABLE IF NOT EXISTS `Notes` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `projectId` smallint(5),
   `title` varchar(30) DEFAULT NULL,
@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS `notes` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `Users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `Users` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `name` varchar(30) DEFAULT NULL,
   `email` varchar(100) DEFAULT NULL,
@@ -64,10 +64,10 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `Tags`
 --
 
-CREATE TABLE IF NOT EXISTS `tags` (
+CREATE TABLE IF NOT EXISTS `Tags` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `noteId` smallint(5),
   `text` varchar(30) DEFAULT NULL,

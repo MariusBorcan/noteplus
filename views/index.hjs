@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+ <html>
+    <head>
+        <title>Noteplus</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        Non-react stuff
+        <script type="text/javascript" src="/public/build/bundle.js"></script>
+    </body>
+</html>
