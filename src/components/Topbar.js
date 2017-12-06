@@ -7,22 +7,27 @@ import { Modal } from 'react-bootstrap'
 import { form } from 'react-bootstrap'
 import { FormGroup } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
+import axios from 'axios'
 
 class Topbar extends Component{
     
-        constructor() {
-        super()
+        constructor(...args) {
+        super(...args)
         this.state = {
             showProjectModal: false,
             showNoteModal: false,
-            projectName: "",
-            projectUrl: "",
-            projectDescription: ""
+            project: {
+                name:"",
+                description:"",
+                url:""
+            }
         }
         this.closeProjectModal = this.closeProjectModal.bind(this);
         this.openProjectModal = this.openProjectModal.bind(this);
         this.closeNoteModal = this.closeNoteModal.bind(this);
         this.openNoteModal = this.openNoteModal.bind(this);
+        this.validateProject = this.validateProject.bind(this);
+        this.submitProject = this.submitProject.bind(this);
     }
     
     closeProjectModal() {
@@ -32,9 +37,32 @@ class Topbar extends Component{
     }
     
     openProjectModal() {
+        console.log("open modal")
         this.setState({
             showProjectModal: true
         });
+    }
+    
+    validateProject() {
+        var endpoint = this.state.project.url.replace('https://', '').replace('www.', '').replace('github.com', '')
+        var url = 'https://api.github.com/repos' + endpoint
+        axios.get(url)
+        .then(response => {
+            this.setState({
+                project: {
+                    name: response.data.full_name,
+                    description: response.data.description
+                }
+            })
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    }
+    
+    submitProject() {
+        this.props.submitProject(this.state.project);
+        this.closeProjectModal();
     }
     
     closeNoteModal() {
@@ -51,24 +79,29 @@ class Topbar extends Component{
     
     updateProjectUrl(event){
         this.setState({
-            projectUrl: event.target.value
+            project:{
+                url:event.target.value
+            }
         })
     }
     
     updateProjectName(event){
         this.setState({
-            projectName: event.target.value
+            project:{
+                name: event.target.value
+            }
         })
     }
     
     updateProjectDescription(event){
         this.setState({
-            projectDescription: event.target.value
+            project: {
+                description: event.target.value
+            }
         })
     }
     
     render() {
-
         return (
             <div className="col-sm-9">
                 <Dropdown>
@@ -93,12 +126,13 @@ class Topbar extends Component{
                                 <input onChange={this.updateProjectUrl.bind(this)} className="form-control" placeholder="Your project URL..."/>  
                             </FormGroup>
                              <FormGroup>
-                                <input readonly="readonly" onChange={this.updateProjectName.bind(this)} className="form-control" placeholder="Your project name..."/>  
+                                <input readonly="readonly" onChange={this.updateProjectName.bind(this)} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
                             </FormGroup>
                             <FormGroup>
-                                <textarea readonly="readonly" onChange={this.updateProjectDescription.bind(this)} className="form-control" placeholder="Your project description..."/>  
+                                <textarea readonly="readonly" onChange={this.updateProjectDescription.bind(this)} value={this.state.project.description} className="form-control" placeholder="Your project description..."/>  
                             </FormGroup>
-                             <Button className="btn btn-success btn-block">Load</Button>
+                             <Button onClick={this.validateProject} className="btn btn-primary btn-block">Load</Button>
+                             <Button onClick={this.submitProject} className="btn btn-success btn-block">Save</Button>
                              <Button onClick={this.closeProjectModal} className="btn btn-danger btn-block">Cancel</Button>
                         </form>
                     </Modal.Body>

@@ -20,7 +20,7 @@ class Project extends Component {
     render(){
         const listItems = this.state.list.map((preview, i) => {
                     return(
-                            <li><NotePreview currentPreview={ preview } /></li>
+                            <li key={i}><NotePreview currentPreview={ preview } /></li>
                         )
                 })
         return(

@@ -30,6 +30,22 @@ module.exports.findById = function(req, res) {
     })
 };
 
+module.exports.CheckUsername = function(req, res) {
+    db.User.findOne({where: {name:req.params.name}}).then(function(user) {
+        if(user) {
+            res.send([{
+                status:"success",
+                found: true
+            }])
+        } else {
+            res.send([{
+                status:"success",
+                found: false
+            }])
+        }
+    })
+};
+
 module.exports.create = function(req, res) {
 
     db.User.create(req.body).then(function(user) {

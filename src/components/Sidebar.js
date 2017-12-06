@@ -2,22 +2,21 @@ import React, { Component } from 'react'
 import Project from './Project'
 
 class Sidebar extends Component {
-    constructor() {
-        super()
-        this.state = {
-            list: [
-                    {name:"Project 1"},
-                    {name:"Project 2"},
-                    {name:"Project 3"},
-                    {name:"Project 4"}
-                ]
-        }
+    
+    constructor(){
+        super();
     }
+    
+    addProject(project) {
+        console.log("in child");
+        console.log(project);
+    }
+    
     render() {
         
-        const listItems = this.state.list.map((project, i) => {
+        const listItems = this.props.projectsList.map((project, i) => {
             return (
-                    <li><Project currentProject={project} /></li>
+                    <li key={i}><Project currentProject={project} /></li>
                 )
         })
         
