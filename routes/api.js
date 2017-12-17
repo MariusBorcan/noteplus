@@ -17,8 +17,10 @@ router.route('/users').post(userController.create);
 router.route('/users/:id').put(userController.update);
 router.route('/users/:id').delete(userController.delete);
 router.route('/users/find/:name').get(userController.checkUsername);
+router.route('/users/info/:name').get(userController.getInfo);
 router.route('/users/authenticate').post(userController.authenticate);
 router.route('/users/token/:token').get(userController.getToken);
+router.route('/token/fetch').get(userController.fetchToken);
 router.route('/check').get(userController.checkToken);
 
 router.route('/users/:userId/projects').get(projectController.findAll);

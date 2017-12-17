@@ -10,10 +10,10 @@ module.exports.findAll = function (req, res) {
          }
      }).then(
             function(projects) {
-                res.send([{
+                res.send({
                     status: "success",
                     projects: projects
-                }]);
+                });
             }
         )
 };

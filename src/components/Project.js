@@ -7,6 +7,7 @@ class Project extends Component {
     
     constructor(...args) {
         super(...args)
+        /*
         this.state = {
             list: [
                     {title:"Title 1", preview:"This is preview 1"},
@@ -14,6 +15,10 @@ class Project extends Component {
                     {title:"Title 3", preview:"This is preview 3"},
                     {title:"Title 4", preview:"This is preview 4"}
                 ]
+        };
+        */
+        this.state = {
+            list: []
         };
     }
     
@@ -28,6 +33,7 @@ class Project extends Component {
                     <Button bsStyle="" className="button-no-style" onClick={() => this.setState({open: !this.state.open })}>
                         {this.props.currentProject.name}
                     </Button>
+                    
                     <Collapse in= {this.state.open}>
                         <div>
                             <ul style={{listStyleType:'none'}}>

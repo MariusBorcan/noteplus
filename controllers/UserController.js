@@ -46,6 +46,22 @@ module.exports.checkUsername = function(req, res) {
     })
 };
 
+module.exports.getInfo = function(req, res) {
+    db.User.findOne({where: {name:req.params.name}}).then(function(user) {
+        if(user) {
+            res.send({
+                status:"success",
+                user: user
+            })
+        } else {
+            res.send({
+                status:"error",
+                params: req.params.username
+            })
+        }
+    })
+};
+
 module.exports.authenticate = function(req, res) {
     console.log(req.body);
     db.User.findOne({where: {name:req.body.name, password:req.body.password}}).then(function(user){
@@ -68,10 +84,17 @@ module.exports.getToken = function(req, res) {
     res.cookie('token', req.params.token);
     res.send({
        status:"success",
-       test: "test",
        name: req.params.token
     });
 }
+
+module.exports.fetchToken = function(req, res) {
+    res.send({
+       status:"success",
+       name: req.cookies['token']
+    });
+}
+
 
 module.exports.checkToken = function(req, res) {
     var cookieIsSet = false;

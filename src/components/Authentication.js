@@ -17,11 +17,14 @@ class Authentication extends Component{
                 console.log(error);
                 return
             }else {
-                //if cookie is already set, don't show the model
+                //if cookie is already set, don't show the modal
                 //otherwise, show the modal
                 this.setState({
                     showAuthenticationModal: !response.token
                 })
+                if(response.token) {
+                    this.props.userIsReady();    
+                }
             }
         }); 
     }
@@ -195,6 +198,7 @@ class Authentication extends Component{
                             showLoginModal:false,
                             loginSuccess: true
                         });
+                        this.props.userIsReady();
                     }
                 });  
             } else {
@@ -244,6 +248,7 @@ class Authentication extends Component{
                         this.setState({
                             showRegisterModal:false
                         });
+                        this.props.userIsReady();
                     }
                 }); 
            }
@@ -277,7 +282,7 @@ class Authentication extends Component{
                                 <input readonly="readonly" className="form-control" value={this.state.user.name}/>  
                             </FormGroup>
                             <p value ={this.state.validationMessage}></p>
-                            <FormGroup  validationState={this.getLoginValidationState()}>
+                            <FormGroup validationState={this.getLoginValidationState()}>
                                 <input type="password" onChange={this.updatePassword.bind(this)} className="form-control" placeholder="Your password here..."/>  
                             </FormGroup>
                              <Button onClick={this.checkLogin} className="btn btn-success btn-block">Login</Button>

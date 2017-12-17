@@ -8,7 +8,6 @@ class Sidebar extends Component {
     }
     
     addProject(project) {
-        console.log("in child");
         console.log(project);
     }
     
@@ -21,7 +20,7 @@ class Sidebar extends Component {
         })
         
         return(
-                <div className="col-sm-3">
+                <div className="col-sm-3 sidde" style={{backgroundColor:'#000000'}}>
                     <ul style={{listStyleType:'none'}}>
                         {listItems}
                     </ul>

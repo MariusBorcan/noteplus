@@ -6,34 +6,20 @@ import Sidebar from './components/Sidebar'
 import Note from './components/Note'
 import Topbar from './components/Topbar'
 import Authentication from './components/Authentication'
-import APIManager from './utils'
+var APIManager = require('./utils/APIManager')
 
 //this is like creating a new tag named App that we can use as html
 class App extends Component {
     
-    
     constructor() {
         super()
         this.state = {
-            list: []
+            list: [],
+            user: undefined
         }
         this.submitProject = this.submitProject.bind(this);
+        this.userIsReady = this.userIsReady.bind(this);
     }
-    
-    /*
-    componentDidMount(){
-        APIManager.get('/api/users/1/projects', null, (err, res) => {
-            if(err) {
-                alert('ERROR: ' +err)
-                return
-            }
-            
-       //     this.setState({
-        //        list: res.projects
-        //    });
-        }) 
-    }
-    */
     
     submitProject(project) {
         let updatedList = Object.assign([], this.state.list)
@@ -44,13 +30,52 @@ class App extends Component {
         })
     }
     
+    userIsReady() {
+        //get the username
+        APIManager.get('/api/token/fetch', null, (error, response) => {
+            if(error) {
+                alert('ERROR: ' + error);
+                console.log(error);
+                return
+            }else {
+                //get the user information
+                APIManager.get('/api/users/info/'+response.name, null, (err, res) => {
+                    if(err) {
+                        alert('ERROR: ' + err);
+                        console.log(err);
+                        return
+                    }else {
+                        this.setState({
+                            user: res.user
+                        });
+                        //get the projects list
+                        APIManager.get('/api/users/'+this.state.user.id+'/projects', null, (e, r) => {
+                        if(e) {
+                            alert('ERROR: ' + e);
+                            console.log(e);
+                            return
+                        }else {
+                            this.setState({
+                                list: r.projects
+                            });
+                        }
+                });
+                    }
+                });
+            }
+        });
+
+    }
+    
     render() {
         return (
             <div className="container-fluid">
-                <div class="row content">
-                    <Authentication />
-                    <Sidebar projectsList={this.state.list}/>
+            <Authentication userIsReady={this.userIsReady}/>
+                <div className="row">
                     <Topbar submitProject={this.submitProject}/>
+                </div>
+                <div className="row">
+                    <Sidebar projectsList={this.state.list}/>
                     <Note />
                 </div>
             </div>

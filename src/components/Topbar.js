@@ -128,7 +128,7 @@ class Topbar extends Component{
     
     render() {
         return (
-            <div className="col-sm-9">
+            <div className="col-sm-12">
                 <Dropdown>
                     <Dropdown.Toggle bsStyle="" className="button-no-style button-action">
                         <Glyphicon glyph="glyphicon glyphicon-plus" />
