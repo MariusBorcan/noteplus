@@ -5,6 +5,8 @@ var userController = require('../controllers/UserController');
 var projectController = require('../controllers/ProjectController');
 var noteController = require('../controllers/NoteController');
 var tagController = require('../controllers/TagController');
+var cookieParser = require("cookie-parser")
+router.use(cookieParser());
 
 router.use(express.json())
 router.use(express.urlencoded({extended : true}))
@@ -14,7 +16,10 @@ router.route('/users/:id').get(userController.findById);
 router.route('/users').post(userController.create);
 router.route('/users/:id').put(userController.update);
 router.route('/users/:id').delete(userController.delete);
-
+router.route('/users/find/:name').get(userController.checkUsername);
+router.route('/users/authenticate').post(userController.authenticate);
+router.route('/users/token/:token').get(userController.getToken);
+router.route('/check').get(userController.checkToken);
 
 router.route('/users/:userId/projects').get(projectController.findAll);
 router.route('/projects/:id').get(projectController.findById);
@@ -33,6 +38,5 @@ router.route('/tags/:id').get(tagController.findById);
 router.route('/tags').post(tagController.create);
 router.route('/tags/:id').put(tagController.update);
 router.route('/tags/:id').delete(tagController.delete);
-
 
 module.exports = router

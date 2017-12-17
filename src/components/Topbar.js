@@ -20,6 +20,11 @@ class Topbar extends Component{
                 name:"",
                 description:"",
                 url:""
+            },
+            note: {
+                projectId:"",
+                title:"",
+                text:""
             }
         }
         this.closeProjectModal = this.closeProjectModal.bind(this);
@@ -28,6 +33,11 @@ class Topbar extends Component{
         this.openNoteModal = this.openNoteModal.bind(this);
         this.validateProject = this.validateProject.bind(this);
         this.submitProject = this.submitProject.bind(this);
+        this.updateProjectUrl = this.updateProjectUrl.bind(this);
+        this.updateProjectName = this.updateProjectName.bind(this);
+        this.updateProjectDescription = this.updateProjectDescription.bind(this);
+        this.updateNoteTitle = this.updateNoteTitle.bind(this);
+        this.updateNoteText = this.updateNoteText.bind(this);
     }
     
     closeProjectModal() {
@@ -37,7 +47,6 @@ class Topbar extends Component{
     }
     
     openProjectModal() {
-        console.log("open modal")
         this.setState({
             showProjectModal: true
         });
@@ -100,6 +109,22 @@ class Topbar extends Component{
             }
         })
     }
+
+    updateNoteTitle(event){
+        this.setState({
+            note: {
+                title: event.target.value
+            }
+        })
+    }
+    
+    updateNoteText(event){
+        this.setState({
+            note: {
+                text: event.target.value
+            }
+        })
+    }
     
     render() {
         return (
@@ -123,13 +148,13 @@ class Topbar extends Component{
                     <Modal.Body>
                         <form>
                             <FormGroup>
-                                <input onChange={this.updateProjectUrl.bind(this)} className="form-control" placeholder="Your project URL..."/>  
+                                <input onChange={this.updateProjectUrl} className="form-control" placeholder="Your project URL..."/>  
                             </FormGroup>
                              <FormGroup>
-                                <input readonly="readonly" onChange={this.updateProjectName.bind(this)} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
+                                <input readonly="readonly" onChange={this.updateProjectName} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
                             </FormGroup>
                             <FormGroup>
-                                <textarea readonly="readonly" onChange={this.updateProjectDescription.bind(this)} value={this.state.project.description} className="form-control" placeholder="Your project description..."/>  
+                                <textarea readonly="readonly" onChange={this.updateProjectDescription} value={this.state.project.description} className="form-control" placeholder="Your project description..."/>  
                             </FormGroup>
                              <Button onClick={this.validateProject} className="btn btn-primary btn-block">Load</Button>
                              <Button onClick={this.submitProject} className="btn btn-success btn-block">Save</Button>
@@ -143,7 +168,15 @@ class Topbar extends Component{
                         <Modal.Title>Add Note</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        Note body
+                        <form>
+                            <FormGroup>
+                                <input onChange={this.updateNoteTitle} className="form-control" placeholder="Your note title"/>  
+                            </FormGroup>
+                             <FormGroup>
+                                <input readonly="readonly" onChange={this.updateNoteTitle} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
+                            </FormGroup>
+                             <Button onClick={this.submitProject} className="btn btn-success btn-block">Save</Button>
+                        </form>
                     </Modal.Body>
                 </Modal>
             </div>
