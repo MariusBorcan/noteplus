@@ -9572,10 +9572,12 @@ var App = function (_Component) {
 
         _this.state = {
             list: [],
-            user: undefined
+            user: undefined,
+            currentNote: undefined
         };
         _this.submitProject = _this.submitProject.bind(_this);
         _this.userIsReady = _this.userIsReady.bind(_this);
+        _this.displayNote = _this.displayNote.bind(_this);
         return _this;
     }
 
@@ -9584,7 +9586,6 @@ var App = function (_Component) {
         value: function submitProject(project) {
             var updatedList = Object.assign([], this.state.list);
             updatedList.push({ name: project.name });
-            console.log(updatedList);
             this.setState({
                 list: updatedList
             });
@@ -9647,14 +9648,19 @@ var App = function (_Component) {
                                         _this2.setState({
                                             list: newList
                                         });
-
-                                        console.log(_this2.state.list);
                                     })();
                                 }
                             });
                         }
                     });
                 }
+            });
+        }
+    }, {
+        key: 'displayNote',
+        value: function displayNote(newNote) {
+            this.setState({
+                currentNote: newNote
             });
         }
     }, {
@@ -9672,8 +9678,8 @@ var App = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'row' },
-                    _react2.default.createElement(_Sidebar2.default, { projectsList: this.state.list }),
-                    _react2.default.createElement(_Note2.default, null)
+                    _react2.default.createElement(_Sidebar2.default, { projectsList: this.state.list, displayNote: this.displayNote }),
+                    _react2.default.createElement(_Note2.default, { currentNote: this.state.currentNote })
                 )
             );
         }
@@ -26967,10 +26973,18 @@ var Sidebar = function (_Component) {
     function Sidebar() {
         _classCallCheck(this, Sidebar);
 
-        return _possibleConstructorReturn(this, (Sidebar.__proto__ || Object.getPrototypeOf(Sidebar)).call(this));
+        var _this = _possibleConstructorReturn(this, (Sidebar.__proto__ || Object.getPrototypeOf(Sidebar)).call(this));
+
+        _this.displayNote = _this.displayNote.bind(_this);
+        return _this;
     }
 
     _createClass(Sidebar, [{
+        key: 'displayNote',
+        value: function displayNote(currentNote) {
+            this.props.displayNote(currentNote);
+        }
+    }, {
         key: 'addProject',
         value: function addProject(project) {
             console.log(project);
@@ -26978,12 +26992,13 @@ var Sidebar = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            console.log(this.props.projectsList);
+            var _this2 = this;
+
             var listItems = this.props.projectsList.map(function (project, i) {
                 return _react2.default.createElement(
                     'li',
                     { key: i },
-                    _react2.default.createElement(_Project2.default, { currentProject: project })
+                    _react2.default.createElement(_Project2.default, { currentProject: project, displayNote: _this2.displayNote })
                 );
             });
             return _react2.default.createElement(
@@ -27051,47 +27066,33 @@ var Project = function (_Component) {
         var _this = _possibleConstructorReturn(this, (_ref = Project.__proto__ || Object.getPrototypeOf(Project)).call.apply(_ref, [this].concat(args)));
 
         _this.state = {
-            /*
-            list: [
-                {title:"Title 1", preview:"This is preview 1"},
-                {title:"Title 2", preview:"This is preview 2"},
-                {title:"Title 3", preview:"This is preview 3"},
-                {title:"Title 4", preview:"This is preview 4"}
-            ],
-            */
             list: [],
             open: false
         };
+        _this.displayNote = _this.displayNote.bind(_this);
         return _this;
     }
-    /*
-    componentDidUpdate(){
-        APIManager.get('/api/projects/' + this.props.currentProject.id + '/notes', null, (error, response) => {
-            if(error) {
-                alert('ERROR: ' + error);
-                console.log(error);
-                return
-            }else {
-                this.setState({
-                    list: response.notes
-                });
-            }
-        }); 
-    }
-    */
 
     _createClass(Project, [{
+        key: 'displayNote',
+        value: function displayNote(currentNote) {
+            this.props.displayNote(currentNote);
+        }
+    }, {
         key: 'render',
         value: function render() {
             var _this2 = this;
 
-            var listItems = this.state.list.map(function (preview, i) {
-                return _react2.default.createElement(
-                    'li',
-                    { key: i },
-                    _react2.default.createElement(_NotePreview2.default, { currentPreview: preview })
-                );
-            });
+            var listItems = [];
+            if (this.props.currentProject.notes != undefined) {
+                listItems = this.props.currentProject.notes.map(function (preview, i) {
+                    return _react2.default.createElement(
+                        'li',
+                        { key: i },
+                        _react2.default.createElement(_NotePreview2.default, { currentPreview: preview, displayNote: _this2.displayNote })
+                    );
+                });
+            }
             return _react2.default.createElement(
                 'div',
                 null,
@@ -27155,16 +27156,24 @@ var NotePreview = function (_Component) {
     function NotePreview() {
         _classCallCheck(this, NotePreview);
 
-        return _possibleConstructorReturn(this, (NotePreview.__proto__ || Object.getPrototypeOf(NotePreview)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (NotePreview.__proto__ || Object.getPrototypeOf(NotePreview)).call(this));
+
+        _this.displayNote = _this.displayNote.bind(_this);
+        return _this;
     }
 
     _createClass(NotePreview, [{
+        key: "displayNote",
+        value: function displayNote() {
+            this.props.displayNote(this.props.currentPreview);
+        }
+    }, {
         key: "render",
         value: function render() {
 
             return _react2.default.createElement(
                 "div",
-                { className: "note-preview-item" },
+                { className: "note-preview-item", onClick: this.displayNote },
                 _react2.default.createElement(
                     "span",
                     { className: "note-preview-title" },
@@ -27174,7 +27183,7 @@ var NotePreview = function (_Component) {
                 _react2.default.createElement(
                     "span",
                     { className: "note-preview-text" },
-                    this.props.currentPreview.preview
+                    this.props.currentPreview.text
                 )
             );
         }
@@ -41137,11 +41146,15 @@ var Note = function (_Component) {
         key: "render",
         value: function render() {
 
-            return _react2.default.createElement(
+            return this.props.currentNote ? _react2.default.createElement(
                 "div",
                 { className: "col-sm-9" },
-                "Note"
-            );
+                _react2.default.createElement(
+                    "span",
+                    null,
+                    this.props.currentNote.title
+                )
+            ) : null;
         }
     }]);
 
@@ -42578,7 +42591,6 @@ var Authentication = function (_Component) {
                             console.log(error);
                             return;
                         } else {
-                            console.log(response);
                             _this4.setState({
                                 showLoginModal: false,
                                 loginSuccess: true
@@ -42631,7 +42643,6 @@ var Authentication = function (_Component) {
                             console.log(error);
                             return;
                         } else {
-                            console.log(response);
                             _this6.setState({
                                 showRegisterModal: false
                             });

@@ -193,7 +193,6 @@ class Authentication extends Component{
                         return
                     }
                     else {
-                        console.log(response);
                         this.setState({
                             showLoginModal:false,
                             loginSuccess: true
@@ -244,7 +243,6 @@ class Authentication extends Component{
                         return
                     }
                     else {
-                        console.log(response);
                         this.setState({
                             showRegisterModal:false
                         });

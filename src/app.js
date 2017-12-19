@@ -15,16 +15,17 @@ class App extends Component {
         super()
         this.state = {
             list: [],
-            user: undefined
+            user: undefined,
+            currentNote: undefined
         }
         this.submitProject = this.submitProject.bind(this);
         this.userIsReady = this.userIsReady.bind(this);
+        this.displayNote = this.displayNote.bind(this);
     }
     
     submitProject(project) {
         let updatedList = Object.assign([], this.state.list)
         updatedList.push({name: project.name});
-        console.log(updatedList)
         this.setState({
             list: updatedList
         })
@@ -82,8 +83,6 @@ class App extends Component {
                             this.setState({
                                 list: newList
                             });
-                            
-                            console.log(this.state.list);
                         }
                 });
                     }
@@ -91,6 +90,12 @@ class App extends Component {
             }
         });
 
+    }
+    
+    displayNote(newNote) {
+        this.setState({
+            currentNote: newNote
+        });
     }
     
     render() {
@@ -101,8 +106,8 @@ class App extends Component {
                     <Topbar submitProject={this.submitProject}/>
                 </div>
                 <div className="row">
-                    <Sidebar projectsList={this.state.list}/>
-                    <Note />
+                    <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>
+                    <Note currentNote = {this.state.currentNote} />
                 </div>
             </div>
         )

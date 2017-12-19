@@ -5,6 +5,11 @@ class Sidebar extends Component {
     
     constructor(){
         super();
+        this.displayNote = this.displayNote.bind(this);
+    }
+    
+    displayNote(currentNote) {
+        this.props.displayNote(currentNote);
     }
     
     addProject(project) {
@@ -12,10 +17,9 @@ class Sidebar extends Component {
     }
     
     render() {
-        console.log(this.props.projectsList);
         const listItems = this.props.projectsList.map((project, i) => {
             return (
-                    <li key={i}><Project currentProject={project} /></li>
+                    <li key={i}><Project currentProject={project} displayNote={this.displayNote}/></li>
                 )
         })
         return(

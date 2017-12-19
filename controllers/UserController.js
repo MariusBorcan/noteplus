@@ -63,7 +63,6 @@ module.exports.getInfo = function(req, res) {
 };
 
 module.exports.authenticate = function(req, res) {
-    console.log(req.body);
     db.User.findOne({where: {name:req.body.name, password:req.body.password}}).then(function(user){
         console.log(req);
         if(user) {

@@ -10,41 +10,25 @@ class Project extends Component {
         super(...args)
         
         this.state = {
-            /*
-            list: [
-                {title:"Title 1", preview:"This is preview 1"},
-                {title:"Title 2", preview:"This is preview 2"},
-                {title:"Title 3", preview:"This is preview 3"},
-                {title:"Title 4", preview:"This is preview 4"}
-            ],
-            */
             list: [],
             open:false
         };
+        this.displayNote = this.displayNote.bind(this);
     }
-    /*
-    componentDidUpdate(){
-        APIManager.get('/api/projects/' + this.props.currentProject.id + '/notes', null, (error, response) => {
-            if(error) {
-                alert('ERROR: ' + error);
-                console.log(error);
-                return
-            }else {
-                this.setState({
-                    list: response.notes
-                });
-            }
-        }); 
+    
+    displayNote(currentNote) {
+        this.props.displayNote(currentNote);
     }
-    */
     
     render(){
-        
-        const listItems = this.state.list.map((preview, i) => {
+        var listItems = [];
+        if(this.props.currentProject.notes != undefined) {
+            listItems = this.props.currentProject.notes.map((preview, i) => {
                     return(
-                            <li key={i}><NotePreview currentPreview={ preview } /></li>
+                            <li key={i}><NotePreview currentPreview={ preview }  displayNote={this.displayNote}/></li>
                         )
                 })
+        }
         return(
                 <div>
                     <Button bsStyle="" className="button-no-style" onClick={() => this.setState({open: !this.state.open })}>
