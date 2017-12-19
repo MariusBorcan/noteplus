@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `Projects` (
 CREATE TABLE IF NOT EXISTS `Notes` (
   `id` smallint(5) NOT NULL AUTO_INCREMENT,
   `projectId` smallint(5),
-  `title` varchar(30) DEFAULT NULL,
-  `text` varchar(100) DEFAULT NULL,
+  `title` text DEFAULT NULL,
+  `text` text DEFAULT NULL,
   `createdAt` timestamp,
   `updatedAt` timestamp,
   PRIMARY KEY (`id`),

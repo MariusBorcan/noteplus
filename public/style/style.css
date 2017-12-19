@@ -77,8 +77,11 @@ html {
     display: inline-block;
     color:#333333;
     font-size: 14px;
-    width: 300px;
+    width: 250px;
     min-height: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .note-preview-text{
@@ -86,7 +89,11 @@ html {
     display: inline-block;
     color:#959595;
     font-size: 14px;
-    max-width: 300px;
+    width: 250px;
+    max-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .note-preview-item {
