@@ -12,15 +12,14 @@ class Sidebar extends Component {
     }
     
     render() {
-        
+        console.log(this.props.projectsList);
         const listItems = this.props.projectsList.map((project, i) => {
             return (
                     <li key={i}><Project currentProject={project} /></li>
                 )
         })
-        
         return(
-                <div className="col-sm-3 sidde" style={{backgroundColor:'#000000'}}>
+                <div className="col-sm-3 sidebar">
                     <ul style={{listStyleType:'none'}}>
                         {listItems}
                     </ul>

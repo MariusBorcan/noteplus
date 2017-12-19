@@ -126,7 +126,7 @@ html {
 }
 
 .sidebar{
-    position: absolute;
-    bottom: 0;
-    top: 40px;
+    min-width: 250px;
+    max-width: 250px;
+    min-height: 90vh;
 }

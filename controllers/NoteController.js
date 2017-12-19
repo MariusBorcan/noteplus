@@ -10,10 +10,10 @@ module.exports.findAll = function (req, res) {
          }
      }).then(
             function(notes) {
-                res.send([{
+                res.send({
                     status: "success",
                     notes: notes
-                }]);
+                });
             }
         )
 };

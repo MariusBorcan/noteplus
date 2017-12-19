@@ -58,6 +58,32 @@ class App extends Component {
                             this.setState({
                                 list: r.projects
                             });
+                            
+                            const newList = this.state.list;
+                            //attach notes list to projects list
+                            for(var index in this.state.list){
+                                        APIManager.get('/api/projects/' + this.state.list[index].id + '/notes', null, (error, response) => {
+                                            if(error) {
+                                                alert('ERROR: ' + error);
+                                                console.log(error);
+                                                return
+                                            }else {
+                                                
+                                                if(response.notes.length > 0) {
+                                                    //find where to put the incoming notes
+                                                    for(var index2 in newList) {
+                                                        if(newList[index2].id == response.notes[0].projectId)
+                                                            newList[index2].notes = response.notes;
+                                                    }                                                    
+                                                }
+                                            }
+                                        }); 
+                            }
+                            this.setState({
+                                list: newList
+                            });
+                            
+                            console.log(this.state.list);
                         }
                 });
                     }
