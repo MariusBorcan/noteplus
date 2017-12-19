@@ -60,7 +60,8 @@ class Topbar extends Component{
             this.setState({
                 project: {
                     name: response.data.full_name,
-                    description: response.data.description
+                    description: response.data.description,
+                    url: url
                 }
             })
         })
@@ -87,26 +88,26 @@ class Topbar extends Component{
     }
     
     updateProjectUrl(event){
+        var oldProject = this.state.project;
+        oldProject.url = event.target.value;
         this.setState({
-            project:{
-                url:event.target.value
-            }
+            project:oldProject
         })
     }
     
     updateProjectName(event){
+        var oldProject = this.state.project;
+        oldProject.name = event.target.value;
         this.setState({
-            project:{
-                name: event.target.value
-            }
+            project:oldProject
         })
     }
     
     updateProjectDescription(event){
+        var oldProject = this.state.project;
+        oldProject.description = event.target.value;
         this.setState({
-            project: {
-                description: event.target.value
-            }
+            project: oldProject
         })
     }
 
@@ -128,16 +129,17 @@ class Topbar extends Component{
     
     render() {
         return (
-            <div className="col-sm-12">
+            <div className="col-sm-12 topbar">
+                <p class="logo">Noteplus</p>
                 <Dropdown>
                     <Dropdown.Toggle bsStyle="" className="button-no-style button-action">
                         <Glyphicon glyph="glyphicon glyphicon-plus" />
                     </Dropdown.Toggle>
                     <Dropdown.Menu> 
                         <MenuItem eventKey="1" bsStyle="" onSelect={this.openProjectModal}
-                            className="button-no-style button-action">New project</MenuItem>
+                            className="button-no-action">New project</MenuItem>
                         <MenuItem eventKey="2" bsStyle="" onSelect={this.openNoteModal}
-                        className="button-no-style button-action">New note</MenuItem>
+                        className="button-no-action">New note</MenuItem>
                     </Dropdown.Menu>
                 </Dropdown>
                 
@@ -154,7 +156,7 @@ class Topbar extends Component{
                                 <input readonly="readonly" onChange={this.updateProjectName} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
                             </FormGroup>
                             <FormGroup>
-                                <textarea readonly="readonly" onChange={this.updateProjectDescription} value={this.state.project.description} className="form-control" placeholder="Your project description..."/>  
+                                <textarea onChange={this.updateProjectDescription} value={this.state.project.description} className="form-control" placeholder="Your project description..."/>  
                             </FormGroup>
                              <Button onClick={this.validateProject} className="btn btn-primary btn-block">Load</Button>
                              <Button onClick={this.submitProject} className="btn btn-success btn-block">Save</Button>

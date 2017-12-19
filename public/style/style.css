@@ -7,6 +7,10 @@ html {
     height: 100%;
 }
 
+textarea{
+    resize: none;
+}
+
 .button-no-style {
     padding: 0;
     background: none;
@@ -139,4 +143,38 @@ html {
     min-width: 300px;
     max-width: 300px;
     min-height: 90vh;
+    border-right: 1px solid #e5e5e5;
+    padding-top: 20px;
+}
+
+.note-textarea {
+    min-height: 84vh;
+    border: 1px solid #ffffff;
+}
+
+.note-input {
+    border: 1px solid #ffffff;
+    border-bottom-color: #e5e5e5;
+}
+
+.placeholder-message {
+    margin-top: 10%;
+}
+
+.topbar {
+    border-bottom: 1px solid #e5e5e5;
+    display: inline-block;
+    line-height: 3em;
+}
+
+.note-area {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.logo {
+    float:left;
+    font-size: 24px;
+    color: #e27d60;
+    width: 285px;
 }

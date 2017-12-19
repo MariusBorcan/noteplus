@@ -36,11 +36,11 @@ module.exports.findById = function(req, res) {
 
 module.exports.create = function(req, res) {
     db.Project.create(req.body).then(function(project) {
-        res.send([{
+        res.send({
             status: "success",
             project: project
-        }])
-    })
+        });
+    });
 }
 
 module.exports.update = function(req, res) {

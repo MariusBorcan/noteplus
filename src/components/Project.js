@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import NotePreview from './NotePreview'
 import { Button } from 'react-bootstrap'
 import { Collapse } from 'react-bootstrap'
+import { Glyphicon } from 'react-bootstrap'
 var APIManager = require('../utils/APIManager')
 
 class Project extends Component {
@@ -32,7 +33,7 @@ class Project extends Component {
         return(
                 <div>
                     <Button bsStyle="" className="button-no-style" onClick={() => this.setState({open: !this.state.open })}>
-                        {this.props.currentProject.title}
+                        {this.props.currentProject.title} {this.state.open ? <Glyphicon glyph="chevron-up" /> : <Glyphicon glyph="chevron-down" />}
                     </Button>
                     
                     <Collapse in= {this.state.open}>

@@ -24,11 +24,23 @@ class App extends Component {
     }
     
     submitProject(project) {
-        let updatedList = Object.assign([], this.state.list)
-        updatedList.push({name: project.name});
-        this.setState({
-            list: updatedList
-        })
+        //prepare the project
+        const newProject = {
+            userId: this.state.user.id,
+            title: project.name,
+            description: project.description,
+            githubUrl: project.url
+        }
+        //add the project to the database
+        APIManager.post('/api/projects/', newProject, (err, res) => {
+            if(err) {
+                alert('ERROR: ' + err);
+                console.log(err);
+                return
+            }
+        });
+        //update page information
+        this.userIsReady();
     }
     
     userIsReady() {
