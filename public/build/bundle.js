@@ -9810,26 +9810,15 @@ var App = function (_Component) {
                     return;
                 }
             });
-            var newList = this.state.list;
-            //attach notes list to projects list
             for (var index in this.state.list) {
-                APIManager.get('/api/projects/' + this.state.list[index].id + '/notes', null, function (error, response) {
-                    if (error) {
-                        alert('ERROR: ' + error);
-                        console.log(error);
-                        return;
-                    } else {
-                        if (response.notes.length > 0) {
-                            //find where to put the incoming notes
-                            for (var index2 in newList) {
-                                if (newList[index2].id == response.notes[0].projectId) newList[index2].notes = response.notes;
-                            }
-                        }
+                for (var index2 in this.state.list[index].notes) {
+                    if (this.state.list[index].notes[index2].id == note.id) {
+                        this.state.list[index].notes[index2] = note;
                     }
-                });
+                }
             }
             this.setState({
-                list: newList
+                list: this.state.list
             });
         }
     }, {
