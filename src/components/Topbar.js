@@ -59,7 +59,12 @@ class Topbar extends Component{
     
     openProjectModal() {
         this.setState({
-            showProjectModal: true
+            showProjectModal: true,
+            project: {
+                name:"",
+                description:"",
+                url:""
+            }
         });
     }
     
@@ -100,7 +105,12 @@ class Topbar extends Component{
             selectedProjectName: this.props.projectsList.length > 0 ? this.props.projectsList[0].title : "Select a project"
         });
         this.setState({
-            showNoteModal: true
+            showNoteModal: true,
+            note: {
+                projectId:"",
+                title:"",
+                text:""
+            }
         });
     }
     

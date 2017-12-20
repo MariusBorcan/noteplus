@@ -9696,6 +9696,8 @@ var App = function (_Component) {
     _createClass(App, [{
         key: 'submitProject',
         value: function submitProject(project) {
+            var _this2 = this;
+
             //prepare the project
             var newProject = {
                 userId: this.state.user.id,
@@ -9708,29 +9710,50 @@ var App = function (_Component) {
                     alert('ERROR: ' + err);
                     console.log(err);
                     return;
+                } else {
+
+                    var oldList = _this2.state.list;
+                    oldList.push(res.project);
+                    _this2.setState({
+                        list: oldList
+                    });
                 }
             });
-            //update page information
-            this.userIsReady();
         }
     }, {
         key: 'submitNote',
         value: function submitNote(note) {
+            var _this3 = this;
+
             //add the note to the database
             APIManager.post('/api/notes/', note, function (err, res) {
                 if (err) {
                     alert('ERROR: ' + err);
                     console.log(err);
                     return;
+                } else {
+                    //update page information
+
+                    for (var index in _this3.state.list) {
+                        if (note.projectId == _this3.state.list[index].id) {
+                            if (_this3.state.list[index].notes == undefined) {
+                                _this3.state.list[index].notes = [];
+                                _this3.state.list[index].notes.push(res.note);
+                            } else {
+                                _this3.state.list[index].notes.push(res.note);
+                            }
+                        }
+                    }
+                    _this3.setState({
+                        list: _this3.state.list
+                    });
                 }
             });
-            //update page information
-            this.userIsReady();
         }
     }, {
         key: 'userIsReady',
         value: function userIsReady() {
-            var _this2 = this;
+            var _this4 = this;
 
             //get the username
             APIManager.get('/api/token/fetch', null, function (error, response) {
@@ -9746,11 +9769,11 @@ var App = function (_Component) {
                             console.log(err);
                             return;
                         } else {
-                            _this2.setState({
+                            _this4.setState({
                                 user: res.user
                             });
                             //get the projects list
-                            APIManager.get('/api/users/' + _this2.state.user.id + '/projects', null, function (e, r) {
+                            APIManager.get('/api/users/' + _this4.state.user.id + '/projects', null, function (e, r) {
                                 if (e) {
                                     alert('ERROR: ' + e);
                                     console.log(e);
@@ -9759,14 +9782,14 @@ var App = function (_Component) {
                                     var index;
 
                                     (function () {
-                                        _this2.setState({
+                                        _this4.setState({
                                             list: r.projects
                                         });
 
-                                        var newList = _this2.state.list;
+                                        var newList = _this4.state.list;
                                         //attach notes list to projects list
-                                        for (index in _this2.state.list) {
-                                            APIManager.get('/api/projects/' + _this2.state.list[index].id + '/notes', null, function (error, response) {
+                                        for (index in _this4.state.list) {
+                                            APIManager.get('/api/projects/' + _this4.state.list[index].id + '/notes', null, function (error, response) {
                                                 if (error) {
                                                     alert('ERROR: ' + error);
                                                     console.log(error);
@@ -9782,7 +9805,7 @@ var App = function (_Component) {
                                                 }
                                             });
                                         }
-                                        _this2.setState({
+                                        _this4.setState({
                                             list: newList
                                         });
                                     })();
@@ -41489,7 +41512,12 @@ var Topbar = function (_Component) {
         key: 'openProjectModal',
         value: function openProjectModal() {
             this.setState({
-                showProjectModal: true
+                showProjectModal: true,
+                project: {
+                    name: "",
+                    description: "",
+                    url: ""
+                }
             });
         }
     }, {
@@ -41534,7 +41562,12 @@ var Topbar = function (_Component) {
                 selectedProjectName: this.props.projectsList.length > 0 ? this.props.projectsList[0].title : "Select a project"
             });
             this.setState({
-                showNoteModal: true
+                showNoteModal: true,
+                note: {
+                    projectId: "",
+                    title: "",
+                    text: ""
+                }
             });
         }
     }, {

@@ -40,10 +40,16 @@ class App extends Component {
                 alert('ERROR: ' + err);
                 console.log(err);
                 return
+            } else {
+                        
+                var oldList = this.state.list;
+                oldList.push(res.project);
+                this.setState({
+                    list: oldList
+                });
             }
         });
-        //update page information
-        this.userIsReady();
+
     }
     
     submitNote(note) {
@@ -53,10 +59,24 @@ class App extends Component {
                 alert('ERROR: ' + err);
                 console.log(err);
                 return
+            } else {
+                //update page information
+                    
+                    for(var index in this.state.list) {
+                        if(note.projectId == this.state.list[index].id){
+                            if(this.state.list[index].notes == undefined) {
+                                this.state.list[index].notes = [];
+                                this.state.list[index].notes.push(res.note);
+                            } else {
+                                this.state.list[index].notes.push(res.note);
+                            }
+                        }
+                    }
+                    this.setState({
+                        list:this.state.list
+                    });
             }
         });
-        //update page information
-        this.userIsReady();
     }
     
     userIsReady() {
