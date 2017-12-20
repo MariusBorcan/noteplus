@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import Sidebar from './components/Sidebar'
 import Note from './components/Note'
 import Topbar from './components/Topbar'
+import ErrorModal from './components/ErrorModal'
 import Authentication from './components/Authentication'
 var APIManager = require('./utils/APIManager')
 
@@ -19,6 +20,7 @@ class App extends Component {
             currentNote: undefined
         }
         this.submitProject = this.submitProject.bind(this);
+        this.submitNote = this.submitNote.bind(this);
         this.userIsReady = this.userIsReady.bind(this);
         this.displayNote = this.displayNote.bind(this);
     }
@@ -33,6 +35,19 @@ class App extends Component {
         }
         //add the project to the database
         APIManager.post('/api/projects/', newProject, (err, res) => {
+            if(err) {
+                alert('ERROR: ' + err);
+                console.log(err);
+                return
+            }
+        });
+        //update page information
+        this.userIsReady();
+    }
+    
+    submitNote(note) {
+        //add the note to the database
+        APIManager.post('/api/notes/', note, (err, res) => {
             if(err) {
                 alert('ERROR: ' + err);
                 console.log(err);
@@ -115,7 +130,7 @@ class App extends Component {
             <div className="container-fluid">
             <Authentication userIsReady={this.userIsReady}/>
                 <div className="row">
-                    <Topbar submitProject={this.submitProject}/>
+                    <Topbar submitProject={this.submitProject} submitNote={this.submitNote} projectsList={this.state.list}/>
                 </div>
                 <div className="row">
                     <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>

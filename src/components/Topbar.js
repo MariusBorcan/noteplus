@@ -7,6 +7,8 @@ import { Modal } from 'react-bootstrap'
 import { form } from 'react-bootstrap'
 import { FormGroup } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
+import { ButtonToolbar } from 'react-bootstrap'
+import ErrorModal from './ErrorModal'
 import axios from 'axios'
 
 class Topbar extends Component{
@@ -25,7 +27,12 @@ class Topbar extends Component{
                 projectId:"",
                 title:"",
                 text:""
-            }
+            },
+            projectsList: [],
+            selectedProjectId: 0,
+            selectedProjectName: "Select a project",
+            showErrorModal: false,
+            errorModalMessage: ""
         }
         this.closeProjectModal = this.closeProjectModal.bind(this);
         this.openProjectModal = this.openProjectModal.bind(this);
@@ -33,11 +40,15 @@ class Topbar extends Component{
         this.openNoteModal = this.openNoteModal.bind(this);
         this.validateProject = this.validateProject.bind(this);
         this.submitProject = this.submitProject.bind(this);
+        this.submitNote = this.submitNote.bind(this);
         this.updateProjectUrl = this.updateProjectUrl.bind(this);
         this.updateProjectName = this.updateProjectName.bind(this);
         this.updateProjectDescription = this.updateProjectDescription.bind(this);
         this.updateNoteTitle = this.updateNoteTitle.bind(this);
         this.updateNoteText = this.updateNoteText.bind(this);
+        this.updateSelectedProject = this.updateSelectedProject.bind(this);
+        this.closeErrorModal = this.closeErrorModal.bind(this);
+        this.showErrorModal = this.showErrorModal.bind(this);
     }
     
     closeProjectModal() {
@@ -82,6 +93,12 @@ class Topbar extends Component{
     }
     
     openNoteModal() {
+        //get all the projects
+        this.setState({
+            projectsList: this.props.projectsList,
+            selectedProjectId: this.props.projectsList.length > 0 ? this.props.projectsList[0].id : 0,
+            selectedProjectName: this.props.projectsList.length > 0 ? this.props.projectsList[0].title : "Select a project"
+        });
         this.setState({
             showNoteModal: true
         });
@@ -127,7 +144,59 @@ class Topbar extends Component{
         })
     }
     
+    updateSelectedProject(eventKey) {
+        //eventKey holds the project id
+        //find the selected project
+        for(var index in this.state.projectsList) {
+            if(this.state.projectsList[index].id == eventKey) {
+                this.setState({
+                    selectedProjectId: eventKey,
+                    selectedProjectName: this.state.projectsList[index].title
+                });
+            }
+        }
+    }
+    
+    showErrorModal(message){
+        this.setState({
+            errorModalMessage: message,
+            showErrorModal: true
+        });
+    }
+    
+    closeErrorModal() {
+        this.setState({
+            showErrorModal:false
+        })
+    }
+    
+    submitNote() {
+        var validated = true;
+        if(this.state.selectedProjectId==0) {
+            validated = false;
+            this.showErrorModal("You have not selected any project. If your project list is empty, you first need to add a project, and then add a note.");
+        }
+        if(this.state.note.title == "") {
+            validated = false;
+            this.showErrorModal("Your note needs to have a title to start.");
+        }
+        if(validated==true) {
+            const newNote = {
+                projectId: this.state.selectedProjectId,
+                title: this.state.note.title,
+                text: "Your note text..."
+            }
+            this.props.submitNote(newNote);
+            this.closeNoteModal();
+        }
+    }
+    
     render() {
+        const dropdownItems = this.props.projectsList.map((project, i) => {
+            return (
+                    <MenuItem className=" select-project" eventKey={project.id}>{project.title}</MenuItem>
+                );
+        })
         return (
             <div className="col-sm-12 topbar">
                 <p class="logo">Noteplus</p>
@@ -175,12 +244,18 @@ class Topbar extends Component{
                                 <input onChange={this.updateNoteTitle} className="form-control" placeholder="Your note title"/>  
                             </FormGroup>
                              <FormGroup>
-                                <input readonly="readonly" onChange={this.updateNoteTitle} value={this.state.project.name} className="form-control" placeholder="Your project name..."/>  
+                                <ButtonToolbar>
+                                    <DropdownButton onSelect={this.updateSelectedProject} bsSize="large" className=" select-project" title={this.state.selectedProjectName} id="dropdown-size-large">
+                                        {dropdownItems}
+                                    </DropdownButton>
+                                </ButtonToolbar>
                             </FormGroup>
-                             <Button onClick={this.submitProject} className="btn btn-success btn-block">Save</Button>
+                             <Button onClick={this.submitNote} className="btn btn-success btn-block">Save</Button>
                         </form>
                     </Modal.Body>
                 </Modal>
+                
+                <ErrorModal showErrorModal={this.state.showErrorModal} closeErrorModal={this.closeErrorModal} errorModalMessage={this.state.errorModalMessage}/>
             </div>
         )
     }

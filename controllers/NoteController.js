@@ -36,10 +36,10 @@ module.exports.findById = function(req, res) {
 
 module.exports.create = function(req, res) {
     db.Note.create(req.body).then(function(note) {
-        res.send([{
+        res.send({
             status: "success",
             note: note
-        }])
+        });
     })
 }
 

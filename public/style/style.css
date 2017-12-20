@@ -178,3 +178,8 @@ textarea{
     color: #e27d60;
     width: 285px;
 }
+
+.select-project {
+    width: 565px;
+    text-align: center;
+}
