@@ -35,6 +35,7 @@ class Note extends Component{
         this.setState({
             currentNote: oldNote
         });
+        this.props.saveNote(this.state.currentNote);
     }
     
     updateCurrentNoteText(event) {
@@ -43,10 +44,10 @@ class Note extends Component{
         this.setState({
             currentNote: oldNote
         });
+        this.props.saveNote(this.state.currentNote);
     }    
     
     render() {
-        
         return (
             this.state.currentNote ?
             <div className="col-sm-9 note-area">

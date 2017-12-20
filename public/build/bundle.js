@@ -5105,6 +5105,23 @@ module.exports.post = function (url, body, callback) {
     });
 };
 
+module.exports.put = function (url, body, callback) {
+    console.log(url);
+    _superagent2.default.put(url).send(body).set('Accept', 'application/json').end(function (err, res) {
+        if (err) {
+            callback(err, null);
+            return;
+        }
+
+        var status = res.body.status;
+        if (status != 'success') {
+            callback({ message: res.body.error });
+            return;
+        }
+        callback(null, res.body);
+    });
+};
+
 /***/ }),
 /* 88 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -9672,6 +9689,7 @@ var App = function (_Component) {
         _this.submitNote = _this.submitNote.bind(_this);
         _this.userIsReady = _this.userIsReady.bind(_this);
         _this.displayNote = _this.displayNote.bind(_this);
+        _this.saveNote = _this.saveNote.bind(_this);
         return _this;
     }
 
@@ -9783,6 +9801,38 @@ var App = function (_Component) {
             });
         }
     }, {
+        key: 'saveNote',
+        value: function saveNote(note) {
+            APIManager.put('/api/notes/' + note.id + '/', note, function (err, res) {
+                if (err) {
+                    alert('ERROR: ' + err);
+                    console.log(err);
+                    return;
+                }
+            });
+            var newList = this.state.list;
+            //attach notes list to projects list
+            for (var index in this.state.list) {
+                APIManager.get('/api/projects/' + this.state.list[index].id + '/notes', null, function (error, response) {
+                    if (error) {
+                        alert('ERROR: ' + error);
+                        console.log(error);
+                        return;
+                    } else {
+                        if (response.notes.length > 0) {
+                            //find where to put the incoming notes
+                            for (var index2 in newList) {
+                                if (newList[index2].id == response.notes[0].projectId) newList[index2].notes = response.notes;
+                            }
+                        }
+                    }
+                });
+            }
+            this.setState({
+                list: newList
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -9798,7 +9848,7 @@ var App = function (_Component) {
                     'div',
                     { className: 'row' },
                     _react2.default.createElement(_Sidebar2.default, { projectsList: this.state.list, displayNote: this.displayNote }),
-                    _react2.default.createElement(_Note2.default, { currentNote: this.state.currentNote })
+                    _react2.default.createElement(_Note2.default, { currentNote: this.state.currentNote, saveNote: this.saveNote })
                 )
             );
         }
@@ -27185,7 +27235,6 @@ var Project = function (_Component) {
         var _this = _possibleConstructorReturn(this, (_ref = Project.__proto__ || Object.getPrototypeOf(Project)).call.apply(_ref, [this].concat(args)));
 
         _this.state = {
-            list: [],
             open: false
         };
         _this.displayNote = _this.displayNote.bind(_this);
@@ -27197,6 +27246,9 @@ var Project = function (_Component) {
         value: function displayNote(currentNote) {
             this.props.displayNote(currentNote);
         }
+    }, {
+        key: 'componentWillReceiveProps',
+        value: function componentWillReceiveProps(nextProps) {}
     }, {
         key: 'render',
         value: function render() {
@@ -41302,6 +41354,7 @@ var Note = function (_Component) {
             this.setState({
                 currentNote: oldNote
             });
+            this.props.saveNote(this.state.currentNote);
         }
     }, {
         key: 'updateCurrentNoteText',
@@ -41311,11 +41364,11 @@ var Note = function (_Component) {
             this.setState({
                 currentNote: oldNote
             });
+            this.props.saveNote(this.state.currentNote);
         }
     }, {
         key: 'render',
         value: function render() {
-
             return this.state.currentNote ? _react2.default.createElement(
                 'div',
                 { className: 'col-sm-9 note-area' },

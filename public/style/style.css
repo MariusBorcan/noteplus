@@ -94,6 +94,7 @@ textarea{
     color:#959595;
     font-size: 14px;
     width: 250px;
+    min-height: 30px;
     max-height: 30px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -145,6 +146,8 @@ textarea{
     min-height: 90vh;
     border-right: 1px solid #e5e5e5;
     padding-top: 20px;
+    overflow-y: auto;
+    height: 90vh;
 }
 
 .note-textarea {

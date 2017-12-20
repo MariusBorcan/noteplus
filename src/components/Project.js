@@ -11,14 +11,17 @@ class Project extends Component {
         super(...args)
         
         this.state = {
-            list: [],
-            open:false
+            open:false,
         };
         this.displayNote = this.displayNote.bind(this);
     }
     
     displayNote(currentNote) {
         this.props.displayNote(currentNote);
+    }
+    
+    componentWillReceiveProps(nextProps) {
+        
     }
     
     render(){

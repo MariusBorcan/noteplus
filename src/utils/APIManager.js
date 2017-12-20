@@ -41,3 +41,24 @@ module.exports.post = function(url, body, callback) {
         callback(null, res.body);
     });
 };
+
+module.exports.put = function(url, body, callback) {
+    console.log(url);
+    superagent
+    .put(url)
+    .send(body)
+    .set('Accept', 'application/json')
+    .end((err, res) => {
+        if(err) {
+            callback(err, null)
+            return
+        }
+
+        const status = res.body.status;
+        if(status!='success') {
+            callback({message: res.body.error})
+            return;
+        }
+        callback(null, res.body);
+    });
+};

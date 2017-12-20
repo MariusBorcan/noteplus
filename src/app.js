@@ -23,6 +23,7 @@ class App extends Component {
         this.submitNote = this.submitNote.bind(this);
         this.userIsReady = this.userIsReady.bind(this);
         this.displayNote = this.displayNote.bind(this);
+        this.saveNote = this.saveNote.bind(this);
     }
     
     submitProject(project) {
@@ -125,6 +126,38 @@ class App extends Component {
         });
     }
     
+    saveNote(note) {
+        APIManager.put('/api/notes/'+note.id+'/', note, (err, res) => {
+            if(err) {
+                alert('ERROR: ' + err);
+                console.log(err);
+                return
+            }
+        });
+        const newList = this.state.list;
+        //attach notes list to projects list
+        for(var index in this.state.list){
+            APIManager.get('/api/projects/' + this.state.list[index].id + '/notes', null, (error, response) => {
+                if(error) {
+                    alert('ERROR: ' + error);
+                        console.log(error);
+                        return
+                    }else {
+                        if(response.notes.length > 0) {
+                            //find where to put the incoming notes
+                                for(var index2 in newList) {
+                                    if(newList[index2].id == response.notes[0].projectId)
+                                        newList[index2].notes = response.notes;
+                                    }                                                    
+                                }
+                    }
+            }); 
+                            }
+            this.setState({
+                list: newList
+            });
+    }
+    
     render() {
         return (
             <div className="container-fluid">
@@ -134,7 +167,7 @@ class App extends Component {
                 </div>
                 <div className="row">
                     <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>
-                    <Note currentNote = {this.state.currentNote} />
+                    <Note currentNote = {this.state.currentNote} saveNote= {this.saveNote}/>
                 </div>
             </div>
         )
