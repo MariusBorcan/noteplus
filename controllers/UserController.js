@@ -6,10 +6,10 @@ var db = require('../models/index');
 module.exports.findAll = function (req, res) {
      db.User.findAll().then(
             function(users) {
-                res.send([{
+                res.send({
                     status: "success",
                     users: users
-                }]);
+                });
             }
         )
 };
@@ -17,15 +17,15 @@ module.exports.findAll = function (req, res) {
 module.exports.findById = function(req, res) {
     db.User.findOne({where: {id:req.params.id}}).then(function(user) {
         if(user) {
-            res.send([{
+            res.send({
                 status:"success",
                 user: user
-            }])
+            })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 };
@@ -120,21 +120,21 @@ module.exports.update = function(req, res) {
     db.User.findById(req.params.id).then(function(user) {
         if(user) {
             user.update(req.body).then(function(user){
-                res.send([{
+                res.send({
                     status:"success",
                     user: user
-                }])
+                })
             }).catch(function(error) {
-                res.send([{
+                res.send({
                     status:"error",
                     error: error
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }
@@ -145,15 +145,15 @@ module.exports.delete = function(req, res) {
     db.User.findById(req.params.id).then(function(user) {
         if(user) {
             user.destroy().then(function(){
-                res.send([{
+                res.send({
                     status: "success"
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }

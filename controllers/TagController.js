@@ -10,10 +10,10 @@ module.exports.findAll = function (req, res) {
          }
      }).then(
             function(tags) {
-                res.send([{
+                res.send({
                     status: "success",
                     tags: tags
-                }]);
+                });
             }
         )
 };
@@ -21,25 +21,25 @@ module.exports.findAll = function (req, res) {
 module.exports.findById = function(req, res) {
     db.Tag.findOne({where: {id:req.params.id}}).then(function(tag) {
         if(tag) {
-            res.send([{
+            res.send({
                 status:"success",
                 tag: tag
-            }])
+            })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 };
 
 module.exports.create = function(req, res) {
     db.Tag.create(req.body).then(function(tag) {
-        res.send([{
+        res.send({
             status: "success",
             tag: tag
-        }])
+        })
     })
 }
 
@@ -47,21 +47,21 @@ module.exports.update = function(req, res) {
     db.Tag.findById(req.params.id).then(function(tag) {
         if(tag) {
             tag.update(req.body).then(function(tag){
-                res.send([{
+                res.send({
                     status:"success",
                     tag: tag
-                }])
+                })
             }).catch(function(error) {
-                res.send([{
+                res.send({
                     status:"error",
                     error: error
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }
@@ -71,15 +71,15 @@ module.exports.delete = function(req, res) {
     db.Tag.findById(req.params.id).then(function(tag) {
         if(tag) {
             tag.destroy().then(function(){
-                res.send([{
+                res.send({
                     status: "success"
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }

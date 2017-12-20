@@ -21,15 +21,15 @@ module.exports.findAll = function (req, res) {
 module.exports.findById = function(req, res) {
     db.Note.findOne({where: {id:req.params.id}}).then(function(note) {
         if(note) {
-            res.send([{
+            res.send({
                 status:"success",
                 note: note
-            }])
+            })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 };
@@ -47,21 +47,21 @@ module.exports.update = function(req, res) {
     db.Note.findById(req.params.id).then(function(note) {
         if(note) {
             note.update(req.body).then(function(note){
-                res.send([{
+                res.send({
                     status:"success",
                     note: note
-                }])
+                })
             }).catch(function(error) {
-                res.send([{
+                res.send({
                     status:"error",
                     error: error
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }
@@ -71,15 +71,15 @@ module.exports.delete = function(req, res) {
     db.Note.findById(req.params.id).then(function(note) {
         if(note) {
             note.destroy().then(function(){
-                res.send([{
+                res.send({
                     status: "success"
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }

@@ -21,15 +21,15 @@ module.exports.findAll = function (req, res) {
 module.exports.findById = function(req, res) {
     db.Project.findOne({where: {id:req.params.id}}).then(function(project) {
         if(project) {
-            res.send([{
+            res.send({
                 status:"success",
                 project: project
-            }])
+            })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 };
@@ -47,21 +47,21 @@ module.exports.update = function(req, res) {
     db.Project.findById(req.params.id).then(function(project) {
         if(project) {
             project.update(req.body).then(function(project){
-                res.send([{
+                res.send({
                     status:"success",
                     project: project
-                }])
+                })
             }).catch(function(error) {
-                res.send([{
+                res.send({
                     status:"error",
                     error: error
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }
@@ -72,15 +72,15 @@ module.exports.delete = function(req, res) {
     db.Project.findById(req.params.id).then(function(project) {
         if(project) {
             project.destroy().then(function(){
-                res.send([{
+                res.send({
                     status: "success"
-                }])
+                })
             })
         } else {
-            res.send([{
+            res.send({
                 status:"error",
                 error: "Not found"
-            }])
+            })
         }
     })
 }
