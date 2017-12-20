@@ -7,6 +7,9 @@ import Note from './components/Note'
 import Topbar from './components/Topbar'
 import ErrorModal from './components/ErrorModal'
 import Authentication from './components/Authentication'
+import { Modal } from 'react-bootstrap'
+import { FormGroup } from 'react-bootstrap'
+import { Button } from 'react-bootstrap'
 var APIManager = require('./utils/APIManager')
 
 //this is like creating a new tag named App that we can use as html
@@ -17,13 +20,34 @@ class App extends Component {
         this.state = {
             list: [],
             user: undefined,
-            currentNote: undefined
+            currentNote: undefined,
+            showProjectModal:false,
+            showConfirmationModal: false,
+            showErrorModal: false,
+            errorModalMessage: "",
+            confirmationModalMessage: "",
+            selectedProject: {
+                id: 0,
+                name:"",
+                description: "",
+                url: ""
+            }
         }
         this.submitProject = this.submitProject.bind(this);
         this.submitNote = this.submitNote.bind(this);
         this.userIsReady = this.userIsReady.bind(this);
         this.displayNote = this.displayNote.bind(this);
         this.saveNote = this.saveNote.bind(this);
+        this.editProject = this.editProject.bind(this);
+        this.showProjectModal = this.showProjectModal.bind(this);
+        this.showConfirmationModal = this.showConfirmationModal.bind(this);
+        this.showErrorModal = this.showErrorModal.bind(this);
+        this.closeProjectModal = this.closeProjectModal.bind(this);
+        this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
+        this.closeErrorModal = this.closeErrorModal.bind(this);
+        this.updateProjectName = this.updateProjectName.bind(this);
+        this.updateProjectDescription = this.updateProjectDescription.bind(this);
+        this.updateProject = this.updateProject.bind(this);
     }
     
     submitProject(project) {
@@ -166,17 +190,148 @@ class App extends Component {
         });
     }
     
+    editProject(projectId) {
+        
+        APIManager.get('/api/projects/'+projectId , null, (error, response) => {
+                    if(error) {
+                        alert('ERROR: ' + error)
+                        console.log(error)
+                        return
+                    }
+                    else {
+                        this.setState({
+                            selectedProject:{
+                                id: projectId,
+                                name:response.project.title,
+                                description: response.project.description,
+                                url: response.project.githubUrl
+                            }
+                        });
+                        this.showProjectModal();
+                    }
+        });
+    }
+    
+    showProjectModal() {
+        this.setState({
+            showProjectModal:true
+        })
+    }
+    
+    showConfirmationModal(){
+        this.setState({
+            showConfirmationModal:true
+        })
+    }
+    
+    showErrorModal(message){
+        this.setState({
+            errorModalMessage: message,
+            showErrorModal: true
+        });
+    }
+    
+    closeProjectModal() {
+        this.setState({
+            showProjectModal:false
+        })
+    }
+    
+    closeConfirmationModal(){
+        this.setState({
+            showConfirmationModal:false
+        })
+    }
+    
+    closeErrorModal(){
+        this.setState({
+            showErrorModal:false
+        })
+    }
+    
+    updateProjectName(event){
+        var oldProject = this.state.selectedProject;
+        oldProject.name = event.target.value;
+        this.setState({
+            project:oldProject
+        })
+    }
+    
+    updateProjectDescription(event){
+        var oldProject = this.state.selectedProject;
+        oldProject.description = event.target.value;
+        this.setState({
+            project: oldProject
+        })
+    }
+    
+    updateProject() {
+        var validated = true;
+        if(this.state.selectedProject.name.length<5) {
+            validated = false;
+            this.showErrorModal("Your project name should be at least 5 characters long.");
+        }
+        if(validated==true) {
+            const newProject = {
+                title: this.state.selectedProject.name,
+                description: this.state.selectedProject.description,
+                githubUrl: this.state.selectedProject.url
+            }
+            APIManager.put('/api/projects/'+this.state.selectedProject.id+'/', newProject, (err, res) => {
+                if(err) {
+                    alert('ERROR: ' + err);
+                    console.log(err);
+                    return
+                } else {
+                    for(var index in this.state.list) {
+                        if(this.state.selectedProject.id == this.state.list[index].id){
+                            this.state.list[index].title = newProject.title;
+                            this.state.list[index].description = newProject.description;
+                            this.state.list[index].githubUrl = newProject.githubUrl;
+                        }
+                    }
+                    this.setState({
+                        list:this.state.list
+                    });
+                }
+            });
+            this.closeProjectModal();
+        }
+    }
+    
     render() {
         return (
             <div className="container-fluid">
             <Authentication userIsReady={this.userIsReady}/>
                 <div className="row">
-                    <Topbar submitProject={this.submitProject} submitNote={this.submitNote} projectsList={this.state.list}/>
+                    <Topbar submitProject={this.submitProject} submitNote={this.submitNote} projectsList={this.state.list} 
+                    currentNote={this.state.currentNote} editProject={this.editProject}/>
                 </div>
                 <div className="row">
                     <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>
                     <Note currentNote = {this.state.currentNote} saveNote= {this.saveNote}/>
                 </div>
+                <Modal show={this.state.showProjectModal} onHide={this.closeProjectModal}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Add project</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <form>
+                            <FormGroup>
+                                <input readonly="readonly" value={this.state.selectedProject.url} className="form-control" placeholder="Your project URL..."/>  
+                            </FormGroup>
+                             <FormGroup>
+                                <input onChange={this.updateProjectName} value={this.state.selectedProject.name} className="form-control" placeholder="Your project name..."/>  
+                            </FormGroup>
+                            <FormGroup>
+                                <textarea onChange={this.updateProjectDescription} value={this.state.selectedProject.description} className="form-control" placeholder="Your project description..."/>  
+                            </FormGroup>
+                             <Button onClick={this.updateProject} className="btn btn-success btn-block">Save</Button>
+                             <Button onClick={this.closeProjectModal} className="btn btn-danger btn-block">Cancel</Button>
+                        </form>
+                    </Modal.Body>
+                </Modal>
+                <ErrorModal showErrorModal={this.state.showErrorModal} closeErrorModal={this.closeErrorModal} errorModalMessage={this.state.errorModalMessage}/>
             </div>
         )
     }

@@ -49,6 +49,7 @@ class Topbar extends Component{
         this.updateSelectedProject = this.updateSelectedProject.bind(this);
         this.closeErrorModal = this.closeErrorModal.bind(this);
         this.showErrorModal = this.showErrorModal.bind(this);
+        this.editProject = this.editProject.bind(this);
     }
     
     closeProjectModal() {
@@ -167,6 +168,10 @@ class Topbar extends Component{
         }
     }
     
+    editProject(eventKey) {
+        this.props.editProject(eventKey);
+    }
+    
     showErrorModal(message){
         this.setState({
             errorModalMessage: message,
@@ -207,6 +212,11 @@ class Topbar extends Component{
                     <MenuItem className=" select-project" eventKey={project.id}>{project.title}</MenuItem>
                 );
         })
+        const dropdownProjects = this.props.projectsList.map((project, i) => {
+            return (
+                    <MenuItem eventKey={project.id}>{project.title}</MenuItem>
+                );
+        })
         return (
             <div className="col-sm-12 topbar">
                 <p class="logo">Noteplus</p>
@@ -221,7 +231,31 @@ class Topbar extends Component{
                         className="button-no-action">New note</MenuItem>
                     </Dropdown.Menu>
                 </Dropdown>
-                
+                {
+                this.props.projectsList != undefined && this.props.projectsList.length > 0 ?
+                    <Dropdown>
+                        <Dropdown.Toggle bsStyle="" className="button-no-style button-action">
+                            <Glyphicon glyph="glyphicon glyphicon-edit" />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu onSelect={this.editProject}> 
+                            {dropdownProjects}
+                        </Dropdown.Menu>
+                    </Dropdown>
+                :''}
+                { 
+                this.props.currentNote != undefined?
+                <Dropdown>
+                    <Dropdown.Toggle bsStyle="" className="button-no-style button-action">
+                        <Glyphicon glyph="glyphicon glyphicon-trash" />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu> 
+                        <MenuItem eventKey="1" bsStyle="" onSelect={this.openProjectModal}
+                            className="button-no-action">New project</MenuItem>
+                        <MenuItem eventKey="2" bsStyle="" onSelect={this.openNoteModal}
+                        className="button-no-action">New note</MenuItem>
+                    </Dropdown.Menu>
+                </Dropdown>
+                : '' }
                 <Modal show={this.state.showProjectModal} onHide={this.closeProjectModal}>
                     <Modal.Header closeButton>
                         <Modal.Title>Add project</Modal.Title>

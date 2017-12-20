@@ -9658,6 +9658,8 @@ var _Authentication = __webpack_require__(328);
 
 var _Authentication2 = _interopRequireDefault(_Authentication);
 
+var _reactBootstrap = __webpack_require__(36);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9683,13 +9685,34 @@ var App = function (_Component) {
         _this.state = {
             list: [],
             user: undefined,
-            currentNote: undefined
+            currentNote: undefined,
+            showProjectModal: false,
+            showConfirmationModal: false,
+            showErrorModal: false,
+            errorModalMessage: "",
+            confirmationModalMessage: "",
+            selectedProject: {
+                id: 0,
+                name: "",
+                description: "",
+                url: ""
+            }
         };
         _this.submitProject = _this.submitProject.bind(_this);
         _this.submitNote = _this.submitNote.bind(_this);
         _this.userIsReady = _this.userIsReady.bind(_this);
         _this.displayNote = _this.displayNote.bind(_this);
         _this.saveNote = _this.saveNote.bind(_this);
+        _this.editProject = _this.editProject.bind(_this);
+        _this.showProjectModal = _this.showProjectModal.bind(_this);
+        _this.showConfirmationModal = _this.showConfirmationModal.bind(_this);
+        _this.showErrorModal = _this.showErrorModal.bind(_this);
+        _this.closeProjectModal = _this.closeProjectModal.bind(_this);
+        _this.closeConfirmationModal = _this.closeConfirmationModal.bind(_this);
+        _this.closeErrorModal = _this.closeErrorModal.bind(_this);
+        _this.updateProjectName = _this.updateProjectName.bind(_this);
+        _this.updateProjectDescription = _this.updateProjectDescription.bind(_this);
+        _this.updateProject = _this.updateProject.bind(_this);
         return _this;
     }
 
@@ -9845,6 +9868,127 @@ var App = function (_Component) {
             });
         }
     }, {
+        key: 'editProject',
+        value: function editProject(projectId) {
+            var _this5 = this;
+
+            APIManager.get('/api/projects/' + projectId, null, function (error, response) {
+                if (error) {
+                    alert('ERROR: ' + error);
+                    console.log(error);
+                    return;
+                } else {
+                    _this5.setState({
+                        selectedProject: {
+                            id: projectId,
+                            name: response.project.title,
+                            description: response.project.description,
+                            url: response.project.githubUrl
+                        }
+                    });
+                    _this5.showProjectModal();
+                }
+            });
+        }
+    }, {
+        key: 'showProjectModal',
+        value: function showProjectModal() {
+            this.setState({
+                showProjectModal: true
+            });
+        }
+    }, {
+        key: 'showConfirmationModal',
+        value: function showConfirmationModal() {
+            this.setState({
+                showConfirmationModal: true
+            });
+        }
+    }, {
+        key: 'showErrorModal',
+        value: function showErrorModal(message) {
+            this.setState({
+                errorModalMessage: message,
+                showErrorModal: true
+            });
+        }
+    }, {
+        key: 'closeProjectModal',
+        value: function closeProjectModal() {
+            this.setState({
+                showProjectModal: false
+            });
+        }
+    }, {
+        key: 'closeConfirmationModal',
+        value: function closeConfirmationModal() {
+            this.setState({
+                showConfirmationModal: false
+            });
+        }
+    }, {
+        key: 'closeErrorModal',
+        value: function closeErrorModal() {
+            this.setState({
+                showErrorModal: false
+            });
+        }
+    }, {
+        key: 'updateProjectName',
+        value: function updateProjectName(event) {
+            var oldProject = this.state.selectedProject;
+            oldProject.name = event.target.value;
+            this.setState({
+                project: oldProject
+            });
+        }
+    }, {
+        key: 'updateProjectDescription',
+        value: function updateProjectDescription(event) {
+            var oldProject = this.state.selectedProject;
+            oldProject.description = event.target.value;
+            this.setState({
+                project: oldProject
+            });
+        }
+    }, {
+        key: 'updateProject',
+        value: function updateProject() {
+            var _this6 = this;
+
+            var validated = true;
+            if (this.state.selectedProject.name.length < 5) {
+                validated = false;
+                this.showErrorModal("Your project name should be at least 5 characters long.");
+            }
+            if (validated == true) {
+                var newProject = {
+                    title: this.state.selectedProject.name,
+                    description: this.state.selectedProject.description,
+                    githubUrl: this.state.selectedProject.url
+                };
+                APIManager.put('/api/projects/' + this.state.selectedProject.id + '/', newProject, function (err, res) {
+                    if (err) {
+                        alert('ERROR: ' + err);
+                        console.log(err);
+                        return;
+                    } else {
+                        for (var index in _this6.state.list) {
+                            if (_this6.state.selectedProject.id == _this6.state.list[index].id) {
+                                _this6.state.list[index].title = newProject.title;
+                                _this6.state.list[index].description = newProject.description;
+                                _this6.state.list[index].githubUrl = newProject.githubUrl;
+                            }
+                        }
+                        _this6.setState({
+                            list: _this6.state.list
+                        });
+                    }
+                });
+                this.closeProjectModal();
+            }
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -9854,14 +9998,62 @@ var App = function (_Component) {
                 _react2.default.createElement(
                     'div',
                     { className: 'row' },
-                    _react2.default.createElement(_Topbar2.default, { submitProject: this.submitProject, submitNote: this.submitNote, projectsList: this.state.list })
+                    _react2.default.createElement(_Topbar2.default, { submitProject: this.submitProject, submitNote: this.submitNote, projectsList: this.state.list,
+                        currentNote: this.state.currentNote, editProject: this.editProject })
                 ),
                 _react2.default.createElement(
                     'div',
                     { className: 'row' },
                     _react2.default.createElement(_Sidebar2.default, { projectsList: this.state.list, displayNote: this.displayNote }),
                     _react2.default.createElement(_Note2.default, { currentNote: this.state.currentNote, saveNote: this.saveNote })
-                )
+                ),
+                _react2.default.createElement(
+                    _reactBootstrap.Modal,
+                    { show: this.state.showProjectModal, onHide: this.closeProjectModal },
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Header,
+                        { closeButton: true },
+                        _react2.default.createElement(
+                            _reactBootstrap.Modal.Title,
+                            null,
+                            'Add project'
+                        )
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Body,
+                        null,
+                        _react2.default.createElement(
+                            'form',
+                            null,
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('input', { readonly: 'readonly', value: this.state.selectedProject.url, className: 'form-control', placeholder: 'Your project URL...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('input', { onChange: this.updateProjectName, value: this.state.selectedProject.name, className: 'form-control', placeholder: 'Your project name...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.FormGroup,
+                                null,
+                                _react2.default.createElement('textarea', { onChange: this.updateProjectDescription, value: this.state.selectedProject.description, className: 'form-control', placeholder: 'Your project description...' })
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.updateProject, className: 'btn btn-success btn-block' },
+                                'Save'
+                            ),
+                            _react2.default.createElement(
+                                _reactBootstrap.Button,
+                                { onClick: this.closeProjectModal, className: 'btn btn-danger btn-block' },
+                                'Cancel'
+                            )
+                        )
+                    )
+                ),
+                _react2.default.createElement(_ErrorModal2.default, { showErrorModal: this.state.showErrorModal, closeErrorModal: this.closeErrorModal, errorModalMessage: this.state.errorModalMessage })
             );
         }
     }]);
@@ -41498,6 +41690,7 @@ var Topbar = function (_Component) {
         _this.updateSelectedProject = _this.updateSelectedProject.bind(_this);
         _this.closeErrorModal = _this.closeErrorModal.bind(_this);
         _this.showErrorModal = _this.showErrorModal.bind(_this);
+        _this.editProject = _this.editProject.bind(_this);
         return _this;
     }
 
@@ -41630,6 +41823,11 @@ var Topbar = function (_Component) {
             }
         }
     }, {
+        key: 'editProject',
+        value: function editProject(eventKey) {
+            this.props.editProject(eventKey);
+        }
+    }, {
         key: 'showErrorModal',
         value: function showErrorModal(message) {
             this.setState({
@@ -41676,6 +41874,13 @@ var Topbar = function (_Component) {
                     project.title
                 );
             });
+            var dropdownProjects = this.props.projectsList.map(function (project, i) {
+                return _react2.default.createElement(
+                    _reactBootstrap.MenuItem,
+                    { eventKey: project.id },
+                    project.title
+                );
+            });
             return _react2.default.createElement(
                 'div',
                 { className: 'col-sm-12 topbar' },
@@ -41709,6 +41914,45 @@ var Topbar = function (_Component) {
                         )
                     )
                 ),
+                this.props.projectsList != undefined && this.props.projectsList.length > 0 ? _react2.default.createElement(
+                    _reactBootstrap.Dropdown,
+                    null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Dropdown.Toggle,
+                        { bsStyle: '', className: 'button-no-style button-action' },
+                        _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'glyphicon glyphicon-edit' })
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Dropdown.Menu,
+                        { onSelect: this.editProject },
+                        dropdownProjects
+                    )
+                ) : '',
+                this.props.currentNote != undefined ? _react2.default.createElement(
+                    _reactBootstrap.Dropdown,
+                    null,
+                    _react2.default.createElement(
+                        _reactBootstrap.Dropdown.Toggle,
+                        { bsStyle: '', className: 'button-no-style button-action' },
+                        _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'glyphicon glyphicon-trash' })
+                    ),
+                    _react2.default.createElement(
+                        _reactBootstrap.Dropdown.Menu,
+                        null,
+                        _react2.default.createElement(
+                            _reactBootstrap.MenuItem,
+                            { eventKey: '1', bsStyle: '', onSelect: this.openProjectModal,
+                                className: 'button-no-action' },
+                            'New project'
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.MenuItem,
+                            { eventKey: '2', bsStyle: '', onSelect: this.openNoteModal,
+                                className: 'button-no-action' },
+                            'New note'
+                        )
+                    )
+                ) : '',
                 _react2.default.createElement(
                     _reactBootstrap.Modal,
                     { show: this.state.showProjectModal, onHide: this.closeProjectModal },
