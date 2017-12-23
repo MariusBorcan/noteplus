@@ -22,7 +22,6 @@ module.exports.get = function(url, params, callback) {
 }
 
 module.exports.post = function(url, body, callback) {
-    console.log(url);
     superagent
     .post(url)
     .send(body)
@@ -43,7 +42,6 @@ module.exports.post = function(url, body, callback) {
 };
 
 module.exports.put = function(url, body, callback) {
-    console.log(url);
     superagent
     .put(url)
     .send(body)
@@ -61,4 +59,23 @@ module.exports.put = function(url, body, callback) {
         }
         callback(null, res.body);
     });
+};
+
+module.exports.delete = function(url, params, callback) {
+        superagent
+        .delete(url)
+        .query(params)
+        .set('Accept', 'application/json')
+        .end((err, response) => {
+            if(err){
+                callback(err, null);
+                return;
+            }
+            const status = response.body.status;
+            if(status!='success'){
+                callback({message: response.body.error}, null);
+                return;
+            }
+            callback(null, response.body);
+        });
 };

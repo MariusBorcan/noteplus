@@ -21,7 +21,11 @@ class Note extends Component{
                 currentNote: nextProps.currentNote
             });
         } else {
-            if(this.state.currentNote.title != nextProps.currentNote.title || this.state.currentNote.text != nextProps.currentNote.text) {
+            if(nextProps.currentNote == undefined) {
+                this.setState({
+                    currentNote:undefined
+                });
+            } else if(this.state.currentNote.title != nextProps.currentNote.title || this.state.currentNote.text != nextProps.currentNote.text) {
                 this.setState({
                     currentNote: nextProps.currentNote
                 });

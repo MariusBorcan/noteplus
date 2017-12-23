@@ -8,7 +8,7 @@ import { form } from 'react-bootstrap'
 import { FormGroup } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import { ButtonToolbar } from 'react-bootstrap'
-import ErrorModal from './ErrorModal'
+import MessageModal from './modals/MessageModal'
 import axios from 'axios'
 
 class Topbar extends Component{
@@ -31,8 +31,9 @@ class Topbar extends Component{
             projectsList: [],
             selectedProjectId: 0,
             selectedProjectName: "Select a project",
-            showErrorModal: false,
-            errorModalMessage: ""
+            showMessageModal: false,
+            messageModalBody: "",
+            messageModalTitle: "",
         }
         this.closeProjectModal = this.closeProjectModal.bind(this);
         this.openProjectModal = this.openProjectModal.bind(this);
@@ -47,9 +48,11 @@ class Topbar extends Component{
         this.updateNoteTitle = this.updateNoteTitle.bind(this);
         this.updateNoteText = this.updateNoteText.bind(this);
         this.updateSelectedProject = this.updateSelectedProject.bind(this);
-        this.closeErrorModal = this.closeErrorModal.bind(this);
-        this.showErrorModal = this.showErrorModal.bind(this);
+        this.closeMessageModal = this.closeMessageModal.bind(this);
+        this.showMessageModal = this.showMessageModal.bind(this);
         this.editProject = this.editProject.bind(this);
+        this.deleteProject = this.deleteProject.bind(this);
+        this.deleteNote = this.deleteNote.bind(this);
     }
     
     closeProjectModal() {
@@ -88,8 +91,12 @@ class Topbar extends Component{
     }
     
     submitProject() {
-        this.props.submitProject(this.state.project);
-        this.closeProjectModal();
+        if(this.state.project.name == ""){
+            this.showMessageModal("Your project has not been loaded.");
+        } else {
+            this.props.submitProject(this.state.project);
+            this.closeProjectModal();
+        }
     }
     
     closeNoteModal() {
@@ -172,16 +179,17 @@ class Topbar extends Component{
         this.props.editProject(eventKey);
     }
     
-    showErrorModal(message){
+    showMessageModal(message){
         this.setState({
-            errorModalMessage: message,
-            showErrorModal: true
+            messageModalTitle: "Error",
+            messageModalBody: message,
+            showMessageModal: true
         });
     }
     
-    closeErrorModal() {
+    closeMessageModal() {
         this.setState({
-            showErrorModal:false
+            showMessageModal:false
         })
     }
     
@@ -189,11 +197,11 @@ class Topbar extends Component{
         var validated = true;
         if(this.state.selectedProjectId==0) {
             validated = false;
-            this.showErrorModal("You have not selected any project. If your project list is empty, you first need to add a project, and then add a note.");
+            this.showMessageModal("You have not selected any project. If your project list is empty, you first need to add a project, and then add a note.");
         }
         if(this.state.note.title == "") {
             validated = false;
-            this.showErrorModal("Your note needs to have a title to start.");
+            this.showMessageModal("Your note needs to have a title to start.");
         }
         if(validated==true) {
             const newNote = {
@@ -204,6 +212,14 @@ class Topbar extends Component{
             this.props.submitNote(newNote);
             this.closeNoteModal();
         }
+    }
+    
+    deleteProject() {
+        this.props.deleteProject();
+    }
+    
+    deleteNote() {
+        this.props.deleteNote();
     }
     
     render() {
@@ -249,10 +265,10 @@ class Topbar extends Component{
                         <Glyphicon glyph="glyphicon glyphicon-trash" />
                     </Dropdown.Toggle>
                     <Dropdown.Menu> 
-                        <MenuItem eventKey="1" bsStyle="" onSelect={this.openProjectModal}
-                            className="button-no-action">New project</MenuItem>
-                        <MenuItem eventKey="2" bsStyle="" onSelect={this.openNoteModal}
-                        className="button-no-action">New note</MenuItem>
+                        <MenuItem eventKey="1" bsStyle="" onSelect={this.deleteProject}
+                            className="button-no-action">This project</MenuItem>
+                        <MenuItem eventKey="2" bsStyle="" onSelect={this.deleteNote}
+                        className="button-no-action">This note</MenuItem>
                     </Dropdown.Menu>
                 </Dropdown>
                 : '' }
@@ -299,10 +315,11 @@ class Topbar extends Component{
                     </Modal.Body>
                 </Modal>
                 
-                <ErrorModal showErrorModal={this.state.showErrorModal} closeErrorModal={this.closeErrorModal} errorModalMessage={this.state.errorModalMessage}/>
+                <MessageModal showMessageModal={this.state.showMessageModal} closeMessageModal={this.closeMessageModal}
+                            messageModalBody={this.state.messageModalBody} messageModalTitle={this.state.messageModalTitle}/>
             </div>
         )
     }
 }
 
-export default Topbar
+export default Topbar;

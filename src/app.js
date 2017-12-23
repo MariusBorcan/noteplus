@@ -5,7 +5,8 @@ import ReactDOM from 'react-dom'
 import Sidebar from './components/Sidebar'
 import Note from './components/Note'
 import Topbar from './components/Topbar'
-import ErrorModal from './components/ErrorModal'
+import MessageModal from './components/modals/MessageModal'
+import ConfirmationModal from './components/modals/ConfirmationModal'
 import Authentication from './components/Authentication'
 import { Modal } from 'react-bootstrap'
 import { FormGroup } from 'react-bootstrap'
@@ -23,14 +24,19 @@ class App extends Component {
             currentNote: undefined,
             showProjectModal:false,
             showConfirmationModal: false,
-            showErrorModal: false,
-            errorModalMessage: "",
+            showMessageModal: false,
+            messageModalMessage: "",
+            messageModalBody: "",
             confirmationModalMessage: "",
             selectedProject: {
                 id: 0,
                 name:"",
                 description: "",
                 url: ""
+            },
+            deleteArguments: {
+                id: 0,
+                type: ""
             }
         }
         this.submitProject = this.submitProject.bind(this);
@@ -41,13 +47,17 @@ class App extends Component {
         this.editProject = this.editProject.bind(this);
         this.showProjectModal = this.showProjectModal.bind(this);
         this.showConfirmationModal = this.showConfirmationModal.bind(this);
-        this.showErrorModal = this.showErrorModal.bind(this);
+        this.showMessageModal = this.showMessageModal.bind(this);
         this.closeProjectModal = this.closeProjectModal.bind(this);
         this.closeConfirmationModal = this.closeConfirmationModal.bind(this);
-        this.closeErrorModal = this.closeErrorModal.bind(this);
+        this.closeMessageModal = this.closeMessageModal.bind(this);
         this.updateProjectName = this.updateProjectName.bind(this);
         this.updateProjectDescription = this.updateProjectDescription.bind(this);
         this.updateProject = this.updateProject.bind(this);
+        this.deleteProject = this.deleteProject.bind(this);
+        this.deleteNote = this.deleteNote.bind(this);
+        this.deleteConfirmed = this.deleteConfirmed.bind(this);
+        this.deleteCancelled = this.deleteCancelled.bind(this);
     }
     
     submitProject(project) {
@@ -224,10 +234,11 @@ class App extends Component {
         })
     }
     
-    showErrorModal(message){
+    showMessageModal(title, body){
         this.setState({
-            errorModalMessage: message,
-            showErrorModal: true
+            messageModalTitle: title,
+            messageModalBody: body,
+            showMessageModal: true
         });
     }
     
@@ -243,9 +254,9 @@ class App extends Component {
         })
     }
     
-    closeErrorModal(){
+    closeMessageModal(){
         this.setState({
-            showErrorModal:false
+            showMessageModal:false
         })
     }
     
@@ -269,7 +280,7 @@ class App extends Component {
         var validated = true;
         if(this.state.selectedProject.name.length<5) {
             validated = false;
-            this.showErrorModal("Your project name should be at least 5 characters long.");
+            this.showMessageModal("Error", "Your project name should be at least 5 characters long.");
         }
         if(validated==true) {
             const newProject = {
@@ -299,13 +310,119 @@ class App extends Component {
         }
     }
     
+    deleteProject() {
+        var projectName = "";
+        for(var index in this.state.list) {
+            if(this.state.list[index].id == this.state.currentNote.projectId) {
+                projectName = this.state.list[index].title;
+            }
+        }
+        this.setState({
+            deleteArguments: {
+                id: this.state.currentNote.projectId,
+                type: "project"
+            }, 
+            confirmationModalMessage: 'Are you sure you want to delete project "' + projectName + '"?',
+            showConfirmationModal: true,
+        });
+    }
+    
+    deleteNote() {
+        this.setState({
+            deleteArguments: {
+                id: this.state.currentNote.id,
+                type: "note"
+            }, 
+            confirmationModalMessage: 'Are you sure you want to delete note "' + this.state.currentNote.title + '"?',
+            showConfirmationModal: true,
+        });
+    }
+    
+    deleteConfirmed(){
+        this.setState({
+            showConfirmationModal: false
+        });
+        if(this.state.deleteArguments.type == "project") {
+            APIManager.delete('/api/projects/' + this.state.deleteArguments.id, null, (error, response) => {
+                if(error) {
+                    alert('ERROR: ' + error);
+                    console.log(error);
+                    this.setState({
+                        messageModalTitle: "Error",
+                        messageModalBody: "An error has occurred while deleting.",
+                        showErrorModal:true
+                    });
+                    return;
+                    }else {
+                        //eliminate the project from the list
+                        var newList = [];
+                        for(var index in this.state.list) {
+                            if(this.state.list[index].id != this.state.deleteArguments.id) {
+                                newList.push(this.state.list[index]);
+                            }
+                        }
+                        this.setState({
+                            list:newList, 
+                            messageModalTitle: "Success",
+                            messageModalBody: "Your project has been deleted.",
+                            showMessageModal: true
+                        });
+                    }
+            });            
+       }else if(this.state.deleteArguments.type == "note") {
+            APIManager.delete('/api/notes/' + this.state.deleteArguments.id, null, (error, response) => {
+                if(error) {
+                    alert('ERROR: ' + error);
+                    console.log(error);
+                    this.setState({
+                        messageModalTitle: "Error",
+                        messageModalBody: "An error has occurred while deleting.",
+                        showErrorModal:true
+                    });
+                    return;
+                    }else {
+                        //eliminate the note from the list
+                        var newList = [];
+                        for(var index in this.state.list) {
+                            var newNotes = [];
+                            for(var index2 in this.state.list[index].notes) {
+                                if(this.state.list[index].notes[index2].id != this.state.deleteArguments.id) {
+                                    newNotes.push(this.state.list[index].notes[index2]);
+                                }
+                            }
+                            this.state.list[index].notes = newNotes;
+                        }
+                        this.setState({
+                            list: this.state.list,
+                            messageModalTitle: "Success",
+                            messageModalBody: "Your note has been deleted.",
+                            showMessageModal: true
+                        });
+                    }
+            });           
+       }
+       this.setState({
+           currentNote: undefined
+       });
+    }
+    
+    deleteCancelled(){
+        this.setState({
+            deleteArguments: {
+                id: 0,
+                type: ""
+            },
+            showConfirmationModal: false
+        });
+    }
+    
     render() {
         return (
             <div className="container-fluid">
             <Authentication userIsReady={this.userIsReady}/>
                 <div className="row">
                     <Topbar submitProject={this.submitProject} submitNote={this.submitNote} projectsList={this.state.list} 
-                    currentNote={this.state.currentNote} editProject={this.editProject}/>
+                    currentNote={this.state.currentNote} editProject={this.editProject} deleteProject={this.deleteProject} deleteNote={this.deleteNote}/>
                 </div>
                 <div className="row">
                     <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>
@@ -331,7 +448,10 @@ class App extends Component {
                         </form>
                     </Modal.Body>
                 </Modal>
-                <ErrorModal showErrorModal={this.state.showErrorModal} closeErrorModal={this.closeErrorModal} errorModalMessage={this.state.errorModalMessage}/>
+                <MessageModal showMessageModal={this.state.showMessageModal} closeMessageModal={this.closeMessageModal} 
+                            messageModalBody={this.state.messageModalBody} messageModalTitle={this.state.messageModalTitle}/>
+                <ConfirmationModal showConfirmationModal={this.state.showConfirmationModal} closeConfirmationModal={this.closeConfirmationModal} 
+                confirmationModalMessage={this.state.confirmationModalMessage} deleteConfirmed={this.deleteConfirmed} deleteCancelled={this.deleteCancelled}/>
             </div>
         )
     }

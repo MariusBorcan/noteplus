@@ -67,7 +67,6 @@ module.exports.update = function(req, res) {
 }
 
 module.exports.delete = function(req, res) {
-    //TODO: When deleting a note, delete also it tags
     db.Note.findById(req.params.id).then(function(note) {
         if(note) {
             note.destroy().then(function(){
