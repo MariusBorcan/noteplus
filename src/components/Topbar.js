@@ -34,6 +34,7 @@ class Topbar extends Component{
             showMessageModal: false,
             messageModalBody: "",
             messageModalTitle: "",
+            showUserModal:false
         }
         this.closeProjectModal = this.closeProjectModal.bind(this);
         this.openProjectModal = this.openProjectModal.bind(this);
@@ -53,6 +54,7 @@ class Topbar extends Component{
         this.editProject = this.editProject.bind(this);
         this.deleteProject = this.deleteProject.bind(this);
         this.deleteNote = this.deleteNote.bind(this);
+        this.showUserModal = this.showUserModal.bind(this);
     }
     
     closeProjectModal() {
@@ -222,6 +224,10 @@ class Topbar extends Component{
         this.props.deleteNote();
     }
     
+    showUserModal(){
+        this.props.showUserModal();
+    }
+    
     render() {
         const dropdownItems = this.props.projectsList.map((project, i) => {
             return (
@@ -314,6 +320,12 @@ class Topbar extends Component{
                         </form>
                     </Modal.Body>
                 </Modal>
+                
+                {this.props.user != undefined ?
+                <Button bsStyle="" className="button-no-style top-right" onClick={this.showUserModal}>
+                    <Glyphicon glyph="user" /> {this.props.user.name} 
+                </Button>
+                :""}
                 
                 <MessageModal showMessageModal={this.state.showMessageModal} closeMessageModal={this.closeMessageModal}
                             messageModalBody={this.state.messageModalBody} messageModalTitle={this.state.messageModalTitle}/>

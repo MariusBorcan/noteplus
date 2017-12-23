@@ -9583,6 +9583,10 @@ var _ConfirmationModal = __webpack_require__(328);
 
 var _ConfirmationModal2 = _interopRequireDefault(_ConfirmationModal);
 
+var _UserModal = __webpack_require__(331);
+
+var _UserModal2 = _interopRequireDefault(_UserModal);
+
 var _Authentication = __webpack_require__(329);
 
 var _Authentication2 = _interopRequireDefault(_Authentication);
@@ -9618,6 +9622,7 @@ var App = function (_Component) {
             showProjectModal: false,
             showConfirmationModal: false,
             showMessageModal: false,
+            showUserModal: false,
             messageModalMessage: "",
             messageModalBody: "",
             confirmationModalMessage: "",
@@ -9651,6 +9656,9 @@ var App = function (_Component) {
         _this.deleteNote = _this.deleteNote.bind(_this);
         _this.deleteConfirmed = _this.deleteConfirmed.bind(_this);
         _this.deleteCancelled = _this.deleteCancelled.bind(_this);
+        _this.showUserModal = _this.showUserModal.bind(_this);
+        _this.closeUserModal = _this.closeUserModal.bind(_this);
+        _this.logout = _this.logout.bind(_this);
         return _this;
     }
 
@@ -10040,6 +10048,32 @@ var App = function (_Component) {
             });
         }
     }, {
+        key: 'showUserModal',
+        value: function showUserModal() {
+            this.setState({
+                showUserModal: true
+            });
+        }
+    }, {
+        key: 'closeUserModal',
+        value: function closeUserModal() {
+            this.setState({
+                showUserModal: false
+            });
+        }
+    }, {
+        key: 'logout',
+        value: function logout() {
+            APIManager.delete('/api/token/', null, function (error, response) {
+                if (error) {
+                    alert('ERROR: ' + error);
+                    console.log(error);
+                } else {
+                    window.location.reload();
+                }
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             return _react2.default.createElement(
@@ -10050,7 +10084,8 @@ var App = function (_Component) {
                     'div',
                     { className: 'row' },
                     _react2.default.createElement(_Topbar2.default, { submitProject: this.submitProject, submitNote: this.submitNote, projectsList: this.state.list,
-                        currentNote: this.state.currentNote, editProject: this.editProject, deleteProject: this.deleteProject, deleteNote: this.deleteNote })
+                        currentNote: this.state.currentNote, editProject: this.editProject, deleteProject: this.deleteProject, deleteNote: this.deleteNote,
+                        user: this.state.user, showUserModal: this.showUserModal })
                 ),
                 _react2.default.createElement(
                     'div',
@@ -10107,7 +10142,9 @@ var App = function (_Component) {
                 _react2.default.createElement(_MessageModal2.default, { showMessageModal: this.state.showMessageModal, closeMessageModal: this.closeMessageModal,
                     messageModalBody: this.state.messageModalBody, messageModalTitle: this.state.messageModalTitle }),
                 _react2.default.createElement(_ConfirmationModal2.default, { showConfirmationModal: this.state.showConfirmationModal, closeConfirmationModal: this.closeConfirmationModal,
-                    confirmationModalMessage: this.state.confirmationModalMessage, deleteConfirmed: this.deleteConfirmed, deleteCancelled: this.deleteCancelled })
+                    confirmationModalMessage: this.state.confirmationModalMessage, deleteConfirmed: this.deleteConfirmed, deleteCancelled: this.deleteCancelled }),
+                _react2.default.createElement(_UserModal2.default, { showUserModal: this.state.showUserModal, closeUserModal: this.closeUserModal,
+                    user: this.state.user, logout: this.logout })
             );
         }
     }]);
@@ -41732,7 +41769,8 @@ var Topbar = function (_Component) {
             selectedProjectName: "Select a project",
             showMessageModal: false,
             messageModalBody: "",
-            messageModalTitle: ""
+            messageModalTitle: "",
+            showUserModal: false
         };
         _this.closeProjectModal = _this.closeProjectModal.bind(_this);
         _this.openProjectModal = _this.openProjectModal.bind(_this);
@@ -41752,6 +41790,7 @@ var Topbar = function (_Component) {
         _this.editProject = _this.editProject.bind(_this);
         _this.deleteProject = _this.deleteProject.bind(_this);
         _this.deleteNote = _this.deleteNote.bind(_this);
+        _this.showUserModal = _this.showUserModal.bind(_this);
         return _this;
     }
 
@@ -41941,6 +41980,11 @@ var Topbar = function (_Component) {
             this.props.deleteNote();
         }
     }, {
+        key: 'showUserModal',
+        value: function showUserModal() {
+            this.props.showUserModal();
+        }
+    }, {
         key: 'render',
         value: function render() {
             var dropdownItems = this.props.projectsList.map(function (project, i) {
@@ -42124,6 +42168,13 @@ var Topbar = function (_Component) {
                         )
                     )
                 ),
+                this.props.user != undefined ? _react2.default.createElement(
+                    _reactBootstrap.Button,
+                    { bsStyle: '', className: 'button-no-style top-right', onClick: this.showUserModal },
+                    _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: 'user' }),
+                    ' ',
+                    this.props.user.name
+                ) : "",
                 _react2.default.createElement(_MessageModal2.default, { showMessageModal: this.state.showMessageModal, closeMessageModal: this.closeMessageModal,
                     messageModalBody: this.state.messageModalBody, messageModalTitle: this.state.messageModalTitle })
             );
@@ -43651,6 +43702,113 @@ var MessageModal = function (_Component) {
 }(_react.Component);
 
 exports.default = MessageModal;
+
+/***/ }),
+/* 331 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(0);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactBootstrap = __webpack_require__(24);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var UserModal = function (_Component) {
+    _inherits(UserModal, _Component);
+
+    function UserModal() {
+        var _ref;
+
+        _classCallCheck(this, UserModal);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        var _this = _possibleConstructorReturn(this, (_ref = UserModal.__proto__ || Object.getPrototypeOf(UserModal)).call.apply(_ref, [this].concat(args)));
+
+        _this.closeUserModal = _this.closeUserModal.bind(_this);
+        _this.logout = _this.logout.bind(_this);
+        return _this;
+    }
+
+    _createClass(UserModal, [{
+        key: 'closeUserModal',
+        value: function closeUserModal() {
+            this.props.closeUserModal();
+        }
+    }, {
+        key: 'logout',
+        value: function logout() {
+            this.props.logout();
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            if (this.props.user != undefined) {
+                return _react2.default.createElement(
+                    _reactBootstrap.Modal,
+                    { show: this.props.showUserModal, onHide: this.closeUserModal },
+                    _react2.default.createElement(_reactBootstrap.Modal.Header, { closeButton: true }),
+                    _react2.default.createElement(
+                        _reactBootstrap.Modal.Body,
+                        null,
+                        _react2.default.createElement('img', { src: this.props.user.imageUrl, className: 'thumbnail', thumbnail: true }),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement(
+                            'span',
+                            { 'class': 'user-info' },
+                            'Username: ',
+                            this.props.user.name
+                        ),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement('br', null),
+                        _react2.default.createElement(
+                            'span',
+                            { 'class': 'user-info' },
+                            'Github: ',
+                            this.props.user.githubUrl.replace("api.", "")
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: this.logout, className: 'btn btn-danger btn-block' },
+                            'Logout'
+                        ),
+                        _react2.default.createElement(
+                            _reactBootstrap.Button,
+                            { onClick: this.closeUserModal, className: 'btn btn-default btn-block' },
+                            'Close'
+                        )
+                    )
+                );
+            } else {
+                return null;
+            }
+        }
+    }]);
+
+    return UserModal;
+}(_react.Component);
+
+exports.default = UserModal;
 
 /***/ })
 /******/ ]);

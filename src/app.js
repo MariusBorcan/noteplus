@@ -7,6 +7,7 @@ import Note from './components/Note'
 import Topbar from './components/Topbar'
 import MessageModal from './components/modals/MessageModal'
 import ConfirmationModal from './components/modals/ConfirmationModal'
+import UserModal from './components/modals/UserModal'
 import Authentication from './components/Authentication'
 import { Modal } from 'react-bootstrap'
 import { FormGroup } from 'react-bootstrap'
@@ -25,6 +26,7 @@ class App extends Component {
             showProjectModal:false,
             showConfirmationModal: false,
             showMessageModal: false,
+            showUserModal: false,
             messageModalMessage: "",
             messageModalBody: "",
             confirmationModalMessage: "",
@@ -58,6 +60,9 @@ class App extends Component {
         this.deleteNote = this.deleteNote.bind(this);
         this.deleteConfirmed = this.deleteConfirmed.bind(this);
         this.deleteCancelled = this.deleteCancelled.bind(this);
+        this.showUserModal = this.showUserModal.bind(this);
+        this.closeUserModal = this.closeUserModal.bind(this);
+        this.logout = this.logout.bind(this);
     }
     
     submitProject(project) {
@@ -416,13 +421,38 @@ class App extends Component {
         });
     }
     
+    showUserModal(){
+        this.setState({
+            showUserModal:true
+        });
+        
+    }
+    
+    closeUserModal(){
+        this.setState({
+            showUserModal: false
+        });
+    }
+    
+    logout(){
+        APIManager.delete('/api/token/', null, (error, response) => {
+                if(error) {
+                    alert('ERROR: ' + error);
+                    console.log(error);
+                } else {
+                   window.location.reload(); 
+                }
+        });
+    }
+    
     render() {
         return (
             <div className="container-fluid">
             <Authentication userIsReady={this.userIsReady}/>
                 <div className="row">
                     <Topbar submitProject={this.submitProject} submitNote={this.submitNote} projectsList={this.state.list} 
-                    currentNote={this.state.currentNote} editProject={this.editProject} deleteProject={this.deleteProject} deleteNote={this.deleteNote}/>
+                    currentNote={this.state.currentNote} editProject={this.editProject} deleteProject={this.deleteProject} deleteNote={this.deleteNote}
+                    user={this.state.user} showUserModal={this.showUserModal}/>
                 </div>
                 <div className="row">
                     <Sidebar projectsList={this.state.list} displayNote={this.displayNote}/>
@@ -452,6 +482,8 @@ class App extends Component {
                             messageModalBody={this.state.messageModalBody} messageModalTitle={this.state.messageModalTitle}/>
                 <ConfirmationModal showConfirmationModal={this.state.showConfirmationModal} closeConfirmationModal={this.closeConfirmationModal} 
                 confirmationModalMessage={this.state.confirmationModalMessage} deleteConfirmed={this.deleteConfirmed} deleteCancelled={this.deleteCancelled}/>
+                <UserModal showUserModal={this.state.showUserModal} closeUserModal={this.closeUserModal}
+                        user={this.state.user} logout={this.logout}/>
             </div>
         )
     }

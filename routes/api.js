@@ -22,6 +22,7 @@ router.route('/users/authenticate').post(userController.authenticate);
 router.route('/users/token/:token').get(userController.getToken);
 router.route('/token/fetch').get(userController.fetchToken);
 router.route('/check').get(userController.checkToken);
+router.route('/token').delete(userController.deleteToken);
 
 router.route('/users/:userId/projects').get(projectController.findAll);
 router.route('/projects/:id').get(projectController.findById);

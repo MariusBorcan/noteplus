@@ -104,7 +104,14 @@ module.exports.checkToken = function(req, res) {
         status: "success",
         token: cookieIsSet
     });
-}
+};
+
+module.exports.deleteToken = function(req, res) {
+    res.clearCookie("token");
+    res.send({
+        status:"success"
+    });
+};
 
 module.exports.create = function(req, res) {
 

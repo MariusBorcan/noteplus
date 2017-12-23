@@ -186,3 +186,20 @@ textarea{
     width: 565px;
     text-align: center;
 }
+
+.top-right {
+    float:right;
+    margin-top: 15px;
+    margin-right: 30px;
+}
+
+.thumbnail {
+    width: 100px;
+    height: 100px;
+    float: left;
+    margin-left: 25px;
+}
+
+.user-info {
+    margin-left: 25px;
+}
