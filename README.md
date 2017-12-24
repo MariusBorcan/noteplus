@@ -164,12 +164,9 @@ DELETE https://noteplus-mariusbd.c9users.io/projects/1
  * Projects list
  * Projects search
  * Notes list
- * Notes search
- * Search bar
  * Text editor
  * Options bar
  * User badge
- * Code snippet tool
 
 ## Features
  * Connect with Github
@@ -177,10 +174,7 @@ DELETE https://noteplus-mariusbd.c9users.io/projects/1
  * View notes grouped by projects
  * Add project
  * Add note to a project
- * Search projects
- * Search notes
  * Edit a note
- * Insert snippet into a note
  * Delete note
  * Delete project
 
