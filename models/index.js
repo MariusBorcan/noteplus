@@ -44,6 +44,5 @@ db.Sequelize = Sequelize;
 db.User = require('./User')(sequelize, Sequelize);
 db.Project = require('./Project')(sequelize, Sequelize);
 db.Note = require('./Note')(sequelize, Sequelize);
-db.Tag = require('./Tag')(sequelize, Sequelize);
 
 module.exports = db;

@@ -62,19 +62,3 @@ CREATE TABLE IF NOT EXISTS `Users` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
-
---
--- Table structure for table `Tags`
---
-
-CREATE TABLE IF NOT EXISTS `Tags` (
-  `id` smallint(5) NOT NULL AUTO_INCREMENT,
-  `noteId` smallint(5),
-  `text` varchar(30) DEFAULT NULL,
-  `createdAt` timestamp,
-  `updatedAt` timestamp,
-  PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------

@@ -4,7 +4,6 @@ const models = require('../models/index');
 var userController = require('../controllers/UserController');
 var projectController = require('../controllers/ProjectController');
 var noteController = require('../controllers/NoteController');
-var tagController = require('../controllers/TagController');
 var cookieParser = require("cookie-parser")
 router.use(cookieParser());
 
@@ -36,10 +35,4 @@ router.route('/notes').post(noteController.create);
 router.route('/notes/:id').put(noteController.update);
 router.route('/notes/:id').delete(noteController.delete);
 
-router.route('/notes/:noteId/tags').get(tagController.findAll);
-router.route('/tags/:id').get(tagController.findById);
-router.route('/tags').post(tagController.create);
-router.route('/tags/:id').put(tagController.update);
-router.route('/tags/:id').delete(tagController.delete);
-
-module.exports = router
+module.exports = router;
